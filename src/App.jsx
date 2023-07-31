@@ -1,8 +1,5 @@
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import Panda from './assets/imgs/panda.jsx'
-import plus from './assets/imgs/plus.svg'
 import AddTask from './freatures/AddTask.jsx'
 
 export default function App() {
