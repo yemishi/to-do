@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import { useSelector } from "react-redux"
 import axios from "axios"
 import plus from '../assets/imgs/plus.svg'
+import cancel from '../assets/imgs/cancel.svg'
+import checked from '../assets/imgs/checked.svg'
 
 export default function AddTask({ load, setLoad }) {
 
@@ -22,7 +24,7 @@ export default function AddTask({ load, setLoad }) {
   ]
 
   const motivation = ['Save the galaxy', 'Exercise whenever you can',
-    'The space is the limit', 'TATAKAE', 'Always Study']
+    'The space is the limit', 'TATAKAE', 'always learn something new']
 
   const motivationColor = ['text-blue-500 ', 'text-emerald-600 ',
     'text-orange-500 ', 'text-red-700 ', 'text-green-500']
@@ -81,27 +83,31 @@ export default function AddTask({ load, setLoad }) {
 
       <input onChange={(e) => setName(e.target.value)} type="text" placeholder="task name" className="p-2 rounded-md font-semibold " />
       <input onChange={(e) => setDuration(e.target.value)} step='0' type="number" className="p-2 rounded-md font-semibold " placeholder="30 min" />
-      <input onChange={(e) => setHour(e.target.value)} type='time' className="p-2 rounded-md font-semibold " step='0' />
 
-      <span>
+      <div className="flex justify-between ">
 
-        <button type="submit">add</button>
-        <button onClick={() => setCount(0)}>X</button>
+        <input onChange={(e) => setHour(e.target.value)} type='time' className="p-2 rounded-md font-semibold w-36" step='0' />
 
-      </span>
+        <span >
+          <button type="submit"><img src={checked} className="w-8 mr-3" alt="confirm" /></button>
+          <button onClick={() => setCount(0)}><img src={cancel} className="w-8" alt="cancel"></img></button>
+        </span>
+
+      </div>
 
     </span>
   </form>
 
-  const myButton = <button className="w-full flex justify-end mb-8 " onClick={() => setCount(1)}>
+  const myButton = <button className=" mb-8 " onClick={() => setCount(1)}>
     <img className="w-8 " src={plus} alt="plus" />
   </button>
 
   const currentElement = [myButton, myForm]
 
   return (
-    <>
+
+    <div className="flex justify-end">
       {currentElement[count]}
-    </>
+    </div>
   )
 }
