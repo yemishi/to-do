@@ -1,16 +1,18 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "name": "Cook",
-      "hour": "12:00",
-      "duration": "30"
+      "name": "ad",
+      "hour": "22:02",
+      "duration": "3",
+      "weekDay": 0,
+      "id": 1
     },
     {
-      "id": 2,
-      "name": "study",
-      "hour": "12:00",
-      "duration": "30"
+      "name": "asdsa",
+      "hour": "22:22",
+      "duration": "3",
+      "weekDay": 0,
+      "id": 2
     }
   ]
 }

@@ -10,16 +10,20 @@ export default {
         'litleShadow': 'rgba(28, 28, 28, 0.84)'
       },
       animation: {
-        'pulse-slow': 'wiggle 1.5s ease-in-out '
+        'rever': 'rever 1.5s  linear',
+        'pulse-slow': 'wiggle 1.5s ease-in-out ',
       },
       keyframes: {
+        rever: {
+          '50%': { marginLeft: '0' },
+          '100%': { marginLeft: '0' }
+        },
         wiggle: {
-          '0%': { transform: 'rotate(0deg)', opacity: '0.5', },
-          '30%': { transform: 'rotate(2deg)', opacity: '0.4', },
-          '60%': { transform: 'rotate(-1deg)', height: '20px', opacity: '1', },
-          '100%': { transform: 'rotate(0deg)' }
-        }
-      }
+
+
+        },
+      },
+
     },
     fontFamily: {
       title: ['Kalam'],
