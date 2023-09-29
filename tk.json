@@ -1,18 +1,140 @@
 {
   "tasks": [
     {
-      "name": "ad",
-      "hour": "22:02",
-      "duration": "3",
-      "weekDay": 0,
+      "name": "Study",
+      "hour": "03:00",
+      "duration": 45,
+      "weekDay": [
+        2,
+        1,
+        0,
+        6,
+        3,
+        4,
+        5
+      ],
+      "icon": "/src/assets/imgs/icons/things/thing2.svg",
+      "bg": "bg-pink-300",
+      "tag": [
+        {
+          "tag": "Study",
+          "color": "bg-cyan-300"
+        },
+        {
+          "tag": "Leisure",
+          "color": "bg-emerald-300"
+        },
+        {
+          "tag": "Meal",
+          "color": "bg-indigo-300"
+        },
+        {
+          "tag": "Work",
+          "color": "bg-red-300"
+        }
+      ],
       "id": 1
     },
     {
-      "name": "asdsa",
-      "hour": "22:22",
-      "duration": "3",
-      "weekDay": 0,
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        5
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
       "id": 2
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        6,
+        5
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 3
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [
+        {
+          "tag": "Work",
+          "color": "bg-red-300"
+        },
+        {
+          "tag": "Leisure",
+          "color": "bg-emerald-300"
+        },
+        {
+          "tag": "Study",
+          "color": "bg-cyan-300"
+        },
+        {
+          "tag": "Meal",
+          "color": "bg-indigo-300"
+        },
+        {
+          "tag": "Commute",
+          "color": "bg-amber-300"
+        },
+        {
+          "tag": "Chores",
+          "color": "bg-rose-300"
+        },
+        {
+          "tag": "Break",
+          "color": "bg-amber-300"
+        }
+      ],
+      "id": 4
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        4
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 5
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        0
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-purple-300",
+      "tag": [
+        {
+          "tag": "Work",
+          "color": "bg-red-300"
+        }
+      ],
+      "id": 6
     }
   ]
 }

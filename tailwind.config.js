@@ -4,33 +4,30 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'media',
   theme: {
     extend: {
-      colors: {
-        'litleShadow': 'rgba(28, 28, 28, 0.84)'
+      keyframes: {
+        visibleSwitch: {
+          '0%': { display: 'flex', opacity: 0 },
+          '20%': { opacity: 1 },
+          '75%': { opacity: 1 },
+          '100%': { opacity: 0 },
+        }
       },
       animation: {
-        'rever': 'rever 1.5s  linear',
-        'pulse-slow': 'wiggle 1.5s ease-in-out ',
+        visibleSwitch: 'visibleSwitch 6s ease-in ',
       },
-      keyframes: {
-        rever: {
-          '50%': { marginLeft: '0' },
-          '100%': { marginLeft: '0' }
-        },
-        wiggle: {
-
-
-        },
+      height: {
+        '135': '40rem',
       },
-
     },
     fontFamily: {
-      title: ['Kalam'],
-      slab: ['Roboto Slab'],
+      title: ['Georgia,Times New Roman'],
+      montserrat: ['Montserrat']
+
     },
 
   },
   plugins: [],
 }
-
