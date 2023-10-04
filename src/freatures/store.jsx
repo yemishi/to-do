@@ -1,6 +1,6 @@
 import AlertBox from "./AlertBox"
 import { motion } from 'framer-motion'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useGlobalState } from "../App"
 
 const inputTime = []
@@ -42,17 +42,18 @@ export const verifyLimit = (settedHour, add = 0) => {
     hour: parseToMs(hour, minute) + (add * 3600000) <= 86400000
   }
 }
+export const aa = 'aaa'
 
 export const selectHour = () => inputTime.map((ele) => {
   const { formConfig, setFormConfig, } = useGlobalState()
   const handleDad = (e) => {
     e.stopPropagation()
-    const colectionList = [...document.querySelectorAll('.myB')]
-    colectionList.map(li => { if ([...li.childNodes].includes(e.target)) li.click() })
+    const collectionList = [...document.querySelectorAll('.myB')]
+    collectionList.map(li => { if ([...li.childNodes].includes(e.target)) li.click() })
   }
 
-  const handlerLimit = (colection, element) => {
-    const reverseColection = colection.reverse()
+  const handlerLimit = (collection, element) => {
+    const reverseCollection = collection.reverse()
 
     const handlerElementClass = (e, selectedClass, action) => {
       const check = e.classList.contains(selectedClass)
@@ -73,7 +74,7 @@ export const selectHour = () => inputTime.map((ele) => {
     };
 
     const clearContainer = (ele) => {
-      colection.forEach(e => {
+      collection.forEach(e => {
         if (e !== ele && e.classList.contains('bg-teal-500')) {
           handlerElementClass(e, 'bg-teal-500', 'remove')
         }
@@ -86,7 +87,7 @@ export const selectHour = () => inputTime.map((ele) => {
     setFormConfig({ ...formConfig, hour: element.firstChild.value })
     clearContainer(element)
     if (verifyLimit(element.firstChild.value, formConfig.duration).min) {
-      reverseColection.find((e => {
+      reverseCollection.find((e => {
         if (verifyLimit(e.firstChild.value, formConfig.duration).min) {
           rejectElement(e)
         }
@@ -97,7 +98,7 @@ export const selectHour = () => inputTime.map((ele) => {
       }))
     }
   }
-  return <span key={ele} className="myB font-bold relative text-md cursor-pointer flex duration-500 justify-between px-9 py-4
+  return <span key={ele} className="myB font-semibold relative cursor-pointer flex duration-500 justify-between px-9 py-4
    rounded-lg md:py-6 md:text-lg decoration-4 decoration-red-200" onClick={(e) => handlerLimit([...document.querySelectorAll('.myB')], e.target)}>
 
     <input onClick={(e) => handleDad(e)} type='button' className="cursor-pointer" value={ele} />
@@ -109,7 +110,7 @@ export const selectHour = () => inputTime.map((ele) => {
 }
 )
 
-const msg = 'Duration Limite Exceeded'
+const msg = 'Duration Limit Exceeded'
 
 const timeConfig = (event, type, moreTimeSeparator) => {
   const time = []
@@ -145,19 +146,16 @@ const timeConfig = (event, type, moreTimeSeparator) => {
 
 export const moreTime = () => {
   const durationCheck = document.querySelector('.draggable')
+
   const { currentBox, setCurrentBox, moreTimeSeparator, alertShow, alertHandler, formConfig, setFormConfig } = useGlobalState()
   return [<motion.p
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9 }}
-    transition={{
-      type: "spring",
-      damping: 10,
-      stiffness: 200
-    }}
+    transition={{ type: "spring", damping: 10, stiffness: 200 }}
     initial={{ opacity: 0, x: 100 }}
     animate={{ opacity: 1, x: 0 }}
     className={` ${durationCheck ? Array.from(durationCheck.classList).includes('hidden') ? 'text-teal-300' : 'text-white' : ''} 
-  cursor-pointer font-geogia rota font-bold text-lg `} onClick={() => {
+  cursor-pointer font-bold  `} onClick={() => {
       moreTimeSeparator[0] = 0, moreTimeSeparator[1] = 0, setCurrentBox(1)
     }}> more...</motion.p >,
 
@@ -165,78 +163,86 @@ export const moreTime = () => {
     transition={{ type: "tween" }}
     initial={{ opacity: 0, x: 100 }}
     animate={{ opacity: 1, x: 0 }}
-
-    className="flex w-64 p-2 relative  justify-around bg-gradient-to-br from-teal-800 to-teal-600 shadow-xl mb-8 rounded-lg">
+    className="flex p-2 relative gap-3 justify-around bg-gradient-to-br from-teal-700 to-teal-600 shadow-xl mb-8 rounded-lg">
     <AlertBox msg={msg} toggleOpen={alertHandler} isOpen={alertShow} />
-    <ul className="moreTimeContainer overflow-auto h-52">{timeConfig(23, 'hour', moreTimeSeparator)} </ul>
-    <span className="w-20 flex flex-col justify-between py-2">
+    <ul className="moreTimeContainer  overflow-auto h-40 sm:h-52 md:h-56">{timeConfig(23, 'hour', moreTimeSeparator)} </ul>
+    <span className="flex font-title flex-col justify-between py-2">
 
       <button onClick={(e) => { e.preventDefault(), setCurrentBox(0) }}
-        className=" bg-rose-400 font-title w-20 h-9 rounded-2xl font-semibold">Cancel</button>
+        className=" bg-rose-400 px-2 py-1 rounded-2xl sm:px-4 sm:py-2  ">Cancel</button>
       <button onClick={(e) => {
         e.preventDefault()
 
         const colectionHour = [...document.querySelectorAll('.hour')]
         const firstMin = [...document.querySelectorAll('.min')][0]
         const container = document.querySelectorAll('.moreTimeContainer')
-        if (verifyLimit(formConfig.hour, moreTimeSeparator[0] + moreTimeSeparator[1]).min) {
-          for (let i = colectionHour.length - 1; i >= 0; i--) {
-            if (verifyLimit(formConfig.hour, colectionHour[i].value).hour) {
-              colectionHour[i].click()
-              setFormConfig({ ...formConfig, duration: moreTimeSeparator[0] + firstMin.value })
-              container[0].scrollTo({ top: colectionHour[i].offsetTop - container[0].offsetTop, behavior: 'smooth' })
-              if (!verifyLimit(formConfig.hour, moreTimeSeparator[0] + moreTimeSeparator[1]).min) break;
-            } else colectionHour[i].classList.remove('bg-teal-800')
 
+        const handleButtonClick = () => {
+          const { hour } = formConfig;
+          const targetValue = moreTimeSeparator[0] + moreTimeSeparator[1];
+
+          if (verifyLimit(hour, targetValue).min) {
+            for (let i = colectionHour.length - 1; i >= 0; i--) {
+              if (verifyLimit(hour, colectionHour[i].value).hour) {
+                colectionHour[i].click();
+                setFormConfig({ ...formConfig, duration: moreTimeSeparator[0] + firstMin.value });
+                const scrollToOptions = {
+                  top: colectionHour[i].offsetTop - container[0].offsetTop,
+                  behavior: 'smooth',
+                };
+                container[0].scrollTo(scrollToOptions);
+
+                if (!verifyLimit(hour, targetValue).min) break;
+              } else {
+                colectionHour[i].classList.remove('bg-teal-800');
+              }
+            }
+            alertHandler(1);
+            container[1].scrollTo({ top: firstMin.scrollTop, behavior: 'smooth' });
+            firstMin.click();
+            setTimeout(() => alertHandler(0), 4000);
+          } else {
+            setFormConfig({ ...formConfig, duration: targetValue });
+            durationCheck.classList.add('hidden');
+            setCurrentBox(0);
           }
-          alertHandler(1)
-          container[1].scrollTo({ top: firstMin.scrollTop, behavior: 'smooth' })
-          firstMin.click()
-          setTimeout(() => alertHandler(0), 4000);
-        } else if (!verifyLimit(formConfig.hour, moreTimeSeparator[0] + moreTimeSeparator[1]).min) {
-          setFormConfig({ ...formConfig, duration: moreTimeSeparator[0] + moreTimeSeparator[1] })
-          durationCheck.classList.add('hidden')
-          setCurrentBox(0)
-        }
+        };
 
+        handleButtonClick()
 
-      }} className="test2 bg-sky-500 font-title  w-20 h-9 rounded-2xl font-semibold">Save</button></span>
+      }} className="bg-sky-500 px-2 py-1 rounded-2xl sm:px-4 sm:py-2  ">Save</button></span>
 
-    <ul className="moreTimeContainer overflow-auto h-52">{timeConfig(60, 'min', moreTimeSeparator)}</ul></motion.div >][currentBox]
+    <ul className="moreTimeContainer overflow-auto h-40 sm:h-52 md:h-56">{timeConfig(60, 'min', moreTimeSeparator)}</ul></motion.div >][currentBox]
 }
 
-const lightEffect = [
-  { effec: 'lightZero', content: '15m' },
-  { effec: 'lightOne', content: '30m' },
-  { effec: 'lightTwo', content: '45m' },
-  { effec: 'lightThree', content: '1h' },
-  { effec: 'lightFour', content: '2h' },
-  { effec: 'hidden', content: '' }
-]
+
 export const selectDuration = () => {
-  const { light, setLight, dragAlertShow, dragAlertHandler, formConfig, setFormConfig } = useGlobalState()
+  const { drag, setDrag, dragAlertShow, dragAlertHandler, formConfig, setFormConfig } = useGlobalState()
   const container = document.querySelector('.durationContainer')
-  const durationConfig = (d, c, e) => {
+  const durationConfig = (d, e) => {
     if (verifyLimit(formConfig.hour, d).min) {
       dragAlertHandler(1)
       Array.from(container.childNodes).map((ele, y) => {
         if (ele.value == e.target.value) {
           setTimeout(() => {
-            Array.from(container.childNodes)[y - 1].click()
+            [...container.childNodes][y - 1].click()
           }, 500);
         }
       })
 
     } else dragAlertHandler(0)
+    const draggable = document.querySelector('.draggable')
 
+    draggable.textContent = e.target.value
+    console.log(parseInt(e.target.getBoundingClientRect().left), e.target.offsetLeft)
     setFormConfig({ ...formConfig, duration: d })
-    setLight(c)
-    const duration = document.querySelector('.draggable')
-    duration.classList.remove('hidden')
+    setDrag(e.target.offsetLeft)
+    draggable.classList.remove('hidden')
   }
 
   const handleDrag = () => {
     const draggable = document.querySelector('.draggable')
+    draggable.classList.add('duration-500')
     const draggableRect = draggable.getBoundingClientRect()
     const durations = document.querySelectorAll('.chooseDuration')
     const container = Array.from(durations)
@@ -248,46 +254,50 @@ export const selectDuration = () => {
     container[0].click()
   }
 
-  return <span className="durationContainer  flex font-semibold mb-8 justify-between bg-teal-700 h-16 rounded-lg relative  px-4 overflow-hidden 
-  md:h-20 md:text-lg">
+  return <span className="durationContainer">
     <AlertBox msg={msg} toggleOpen={dragAlertHandler} isOpen={dragAlertShow} />
-    <motion.input
-      ref={lightEffect[light]}
+    <motion.button
       dragElastic={1}
       drag="x"
       onDragStart={() => {
         const ele = document.querySelector('.draggable')
         ele.classList.remove('duration-500')
+
       }}
+
       onDragEnd={() => { handleDrag() }}
       whileDrag={{}}
       dragTransition={{ bounceStiffness: 10, bounceDamping: 20000 }}
       whileTap={{ cursor: 'pointer' }}
       dragConstraints={{ left: 0, right: 0 }}
 
-      type="button" className={`draggable w-24 duration-500 absolute h-14 ${lightEffect[light].effec} top-1 rounded-md bg-teal-600 md:h-16 md:w-28 md:top-2`}
-      value={lightEffect[light].content} />
 
-    <input type="button" className="a w-24 chooseDuration cursor-pointer rounded-md" onClick={(e) => durationConfig(15, 0, e)} value="15m" />
-    <input type="button" className="b w-24 chooseDuration cursor-pointer rounded-md" onClick={(e) => durationConfig(30, 1, e)} value="30m" />
-    <input type="button" className="c w-24 chooseDuration cursor-pointer rounded-md" onClick={(e) => durationConfig(45, 2, e)} value="45m" />
-    <input type="button" className="d w-24 chooseDuration cursor-pointer rounded-md" onClick={(e) => durationConfig(60, 3, e)} value="1h" />
-    <input type="button" className="e w-24 chooseDuration cursor-pointer rounded-md" onClick={(e) => durationConfig(120, 4, e)} value="2h" />
+      type="button" style={{ left: drag, translateY: '-50%', top: '50%' }} className={` justify-center flex items-center draggable duration-500 `}
+    >15m</motion.button >
+
+    <input type="button" className="chooseDuration cursor-pointer w-2/12 rounded-md" onClick={(e) => durationConfig(15, e)} value="15m" />
+    <input type="button" className="chooseDuration cursor-pointer w-2/12 rounded-md" onClick={(e) => durationConfig(30, e)} value="30m" />
+    <input type="button" className="chooseDuration cursor-pointer w-2/12 rounded-md" onClick={(e) => durationConfig(45, e)} value="45m" />
+    <input type="button" className="chooseDuration cursor-pointer w-2/12 rounded-md" onClick={(e) => durationConfig(60, e)} value="1h" />
+    <input type="button" className="chooseDuration cursor-pointer w-2/12 rounded-md" onClick={(e) => durationConfig(124, e)} value="2h" />
   </span>
 }
 
 
-
+export const tagColor = {
+  Leisure: 'bg-emerald-300', Work: 'bg-red-300', Study: 'bg-cyan-300', Meal: 'bg-indigo-300', Commute: 'bg-amber-300',
+  Chores: 'bg-rose-300', Break: 'bg-amber-300',
+}
+export const tags = ['Leisure', 'Work', 'Study', 'Meal', 'Commute', 'Chores', 'Break']
+const gradientTag = {
+  Leisure: 'from-emerald-300', Work: 'from-red-300', Study: 'from-cyan-300', Meal: 'from-indigo-300', Commute: 'from-amber-300',
+  Chores: 'from-rose-300', Break: 'from-amber-300',
+}
 export const tagConfig = () => {
   const { formConfig } = useGlobalState()
-  const bgs = {
-    Leisure: 'bg-emerald-300', Work: 'bg-red-300', Study: 'bg-cyan-300', Meal: 'bg-indigo-300', Commute: 'bg-amber-300',
-    Chores: 'bg-rose-300', Break: 'bg-amber-300',
-  }
-  const defaultTags = ['Leisure', 'Work', 'Study', 'Meal', 'Commute', 'Chores', 'Break']
   const item = (ele, bg) => {
     const tag = { tag: ele, color: bg }
-    return <span key={ele} className={`pl-2  rounded-lg mb-3 bg-teal-800 duration-300 `} onClick={(e) => {
+    return <span key={ele} className={`pl-2 rounded-lg mb-3 bg-teal-800 duration-300 `} onClick={(e) => {
       if ([...e.target.classList].includes(bg)) e.target.classList.remove(bg), e.target.classList.add('bg-teal-800')
       else e.target.classList.add(bg), e.target.classList.remove('bg-teal-800')
       formConfig.tag.some(e => e.tag == ele) ? formConfig.tag.splice(formConfig.tag.findIndex(e => e.tag == ele), 1) : formConfig.tag.push(tag)
@@ -299,6 +309,46 @@ export const tagConfig = () => {
     </span>
   }
   return <div className="flex flex-wrap rounded-2xl mt-5 gap-x-5 p-3 bg-teal-600">
-    {defaultTags.map(ele => item(ele, bgs[ele]))}
+    {tags.map(ele => item(ele, tagColor[ele]))}
   </div >
+}
+
+export const handlerTag = (bgColor) => {
+  const { chosenTag, setChosenTag } = useGlobalState()
+
+  const changeTag = (target) => {
+    if (chosenTag == target) setChosenTag(null)
+    else setChosenTag(target)
+  }
+
+  const items = () => {
+    return tags.map(e => {
+      const shadow = `shadow-${tagColor[e].split('bg-')[1]}`
+      return <span key={e} onClick={() => changeTag(e)} className={`font-montserrat text-sm
+       px-2 py-1 rounded-lg text-center bg-opacity-60 duration-500 ${chosenTag == e ? `shadow-b ${tagColor[e]} sm:bg-transparent` : ''} ${shadow}`}>{e}</span>
+    })
+  }
+
+  const variants = {
+    open: { x: 40 },
+    close: { x: 640 },
+  }
+  const windowWidth = window.innerWidth
+  const intermediateVariant = windowWidth >= 640 ? variants : {}
+  return <motion.div
+    variants={intermediateVariant}
+    initial={{ x: windowWidth >= 640 ? 640 : 0 }}
+    transition={{
+      type: "spring",
+      damping: 50,
+      stiffness: 100
+    }}
+    animate={bgColor ? 'open' : 'close'}
+    className={`sm:bg-gradient-to-l sm:flex-row bg-none to-teal-800 flex justify-center  flex-wrap rounded-l-lg
+    ${gradientTag[chosenTag] ? gradientTag[chosenTag] : 'from-gray-300'} bg-opacity-60 py-2
+        `}>
+    {items()}
+  </motion.div>
+
+
 }

@@ -10,34 +10,49 @@ import cancel from '../assets/imgs/cancel.svg'
 import bin from '../assets/imgs/bin.svg'
 
 export default function EditTask() {
-  const { formConfig, setFormConfig, setLight } = useGlobalState()
-  const navegate = useNavigate()
+  const { formConfig, setFormConfig, setDrag } = useGlobalState()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const durationToLight = { 15: 0, 30: 1, 45: 2, 60: 3, 120: 4 };
+    const durationDrag = [15, 30, 45, 60, 120];
+
     const fetchData = async () => {
       try {
         const res = await axios.get(`http://localhost:3000/tasks/${id}`);
+        const draggable = document.querySelector('.draggable');
+        const chosenDurationKey = durationDrag.find(e => res.data.duration == e);
+
+        if (chosenDurationKey) {
+          const chooseDuration = document.querySelectorAll('.chooseDuration');
+          const valueIndex = durationDrag.indexOf(chosenDurationKey)
+          const textValue = chooseDuration[valueIndex].value;
+          draggable.textContent = textValue;
+          setDrag(chooseDuration[valueIndex].offsetLeft);
+
+        } else draggable.classList.add('hidden')
+
         setFormConfig({ ...formConfig, ...res.data });
-        for (const [key, value] of Object.entries(durationToLight)) {
-          if (res.data.duration == key) return setLight(value)
-          else setLight(5)
-        }
-        const imputCollection = document.querySelectorAll('.myB');
-        Array.from(imputCollection).forEach(e => {
-          if (e.firstChild.value == res.data.hour) {
-            e.classList.add('bg-teal-500');
-            e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        document.querySelectorAll('.myB').forEach(element => {
+          const inputValue = element.firstChild.value;
+          if (inputValue === res.data.hour) {
+            highlight(element);
           }
         });
 
+        function highlight(element) {
+          element.classList.add('bg-teal-500');
+          element.scrollIntoView({ behavior: 'smooth', block: 'nearest',});
+        }
+
       } catch (error) {
-        navegate('/error')
+        navigate('/error')
       }
     };
 
     fetchData();
   }, []);
+
   const { id } = useParams()
   const convertMin = (event) => {
     let minToHour = 0

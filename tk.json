@@ -40,18 +40,6 @@
       "hour": "00:00",
       "duration": 15,
       "weekDay": [
-        5
-      ],
-      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
-      "bg": "bg-amber-500",
-      "tag": [],
-      "id": 2
-    },
-    {
-      "name": "Study",
-      "hour": "00:00",
-      "duration": 15,
-      "weekDay": [
         6,
         5
       ],
@@ -135,6 +123,69 @@
         }
       ],
       "id": 6
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        3
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 7
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        4
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 8
+    },
+    {
+      "name": "TRU SAT",
+      "hour": "00:00",
+      "duration": 15,
+      "weekDay": [
+        6,
+        4
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 9
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 60,
+      "weekDay": [
+        6,
+        5,
+        4
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 10
+    },
+    {
+      "name": "Study",
+      "hour": "00:00",
+      "duration": 1320,
+      "weekDay": [
+        4
+      ],
+      "icon": "/src/assets/imgs/icons/lifestyle/lifestyle15.svg",
+      "bg": "bg-amber-500",
+      "tag": [],
+      "id": 11
     }
   ]
 }

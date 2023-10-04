@@ -1,33 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  darkMode: 'media',
-  theme: {
-    extend: {
-      keyframes: {
-        visibleSwitch: {
-          '0%': { display: 'flex', opacity: 0 },
-          '20%': { opacity: 1 },
-          '75%': { opacity: 1 },
-          '100%': { opacity: 0 },
-        }
-      },
-      animation: {
-        visibleSwitch: 'visibleSwitch 6s ease-in ',
-      },
-      height: {
-        '135': '40rem',
-      },
+module.exports = {
+    content: [   "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",],
+    theme: {
+        extend: {
+            fontFamily: {
+                title: ['Georgia,Times New Roman'],
+                montserrat: ['Montserrat'],
+            },
+            boxShadow: {
+                b: '0px 9px 10px -6px   rgb(0 0 0 / 0.05)',
+            }
+        },
     },
-    fontFamily: {
-      title: ['Georgia,Times New Roman'],
-      montserrat: ['Montserrat']
-
-    },
-
-  },
-  plugins: [],
+    plugins: [],
 }
