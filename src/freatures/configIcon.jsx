@@ -15,19 +15,23 @@ export const selectedIcon = () => {
   const { formConfig } = useGlobalState()
   const scrollToContainer = () => document.querySelector('.iconsContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   return (
-    <div className='flex justify-center mb-7 gap-6 items-center'>
-      <span onClick={scrollToContainer} className='bg-teal-700 border-2 border-teal-500 gap-4 flex items-center w-60 p-2 rounded-xl'>
-        <img src={formConfig.icon ? formConfig.icon : defaultIcon} alt="icon" className={`p-2 duration-500 w-16 rounded-xl ${formConfig.bg ? formConfig.bg : formConfig.demo.bg} `} />
-        <h4 className='font-title font-bold text-xl'>icon</h4>
+
+    <div className='grid grid-cols-2  text-base font-title mb-7 gap-6 items-center md:text-lg sm:px-12 lg:px-32 xl:px-44 lg:text-xl'>
+
+      <span onClick={scrollToContainer} className='bg-teal-700 border-2 border-teal-500 gap-4 flex items-center p-2 sm:p-4  lg:p-6 rounded-xl'>
+        <img src={formConfig.icon ? formConfig.icon : defaultIcon} alt="icon"
+          className={`p-2 w-9 lg:w-16 sm:w-12 md:w-14 duration-500 rounded-xl ${formConfig.bg ? formConfig.bg : formConfig.demo.bg} `} />
+        <p>icon</p>
       </span>
 
-      <span onClick={scrollToContainer} className='bg-teal-700 border-2 border-teal-500 gap-4 flex items-center w-60 p-2 rounded-xl'>
-        <span className='w-[64px] h-[64px] flex items-center justify-center rounded-xl bg-teal-600'>
-          <svg width="47" height="47" className={`rounded-full duration-500 ${formConfig.bg ? formConfig.bg : bgs[3]}`} />
+      <span onClick={scrollToContainer} className='bg-teal-700 border-2 border-teal-500 gap-4 flex items-center p-2  sm:p-4  lg:p-6 rounded-xl'>
+        <span className='flex items-center h-9 sm:h-12  lg:h-16 p-2 md:h-14  justify-center rounded-xl bg-teal-600'>
+          <svg className={`rounded-full h-6 w-6 sm:w-10 sm:h-9 lg:w-12 lg:h-12 md:h-10 md:w-10 duration-500 ${formConfig.bg ? formConfig.bg : bgs[3]}`} />
         </span>
-        <h4 className='font-title font-bold text-xl'>color</h4>
+        <p>color</p>
       </span>
-    </div>)
+    </div>
+  )
 }
 
 
@@ -81,8 +85,8 @@ export const configIcon = () => {
             }
           })
         }}
-        className="justify-self-end bg-teal-600 w-11 h-11   flex justify-center items-center rounded-lg">
-        <img src={goback} className="w-8" alt="goback" /></motion.button>
+        className="justify-self-end bg-teal-600 p-2 flex justify-center items-center rounded-lg">
+        <img src={goback} className="w-4 hover:rotate-180 duration-300 sm:w-6 md:w-8 xl:w-10" alt="reset" /></motion.button>
       <h3 className="text-2xl">Selected</h3>
 
       <Button props={{
