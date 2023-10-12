@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useGlobalState, weekDay } from '../App.jsx'
-import { useTask } from '../freatures/useAxios.js'
+import { useTask } from '../features/useAxios.js'
 import { motion, AnimatePresence } from 'framer-motion'
-import toUp from '../assets/imgs/toUp.svg'
-import toDown from '../assets/imgs/toDown.svg'
 import plus from '../assets/imgs/plus.svg'
 import { Link } from 'react-router-dom'
-import Button from '../freatures/Button.jsx'
+import Button from '../features/Button.jsx'
 import goback from '../assets/imgs/goback.svg'
-import { handlerTag, tagColor } from '../freatures/store.jsx'
-import MobileBar from '../freatures/MobileBar.jsx'
+import { handlerTag, tagColor } from '../features/store.jsx'
+import MobileBar from '../features/MobileBar.jsx'
 import gear from '../assets/imgs/gear.svg'
 
 export default function Home() {
@@ -19,8 +17,7 @@ export default function Home() {
   const currentSeconds = date.getSeconds()
   const [task, setTask] = useState([])
   const { chosenTag, chosenDay, setChosenDay, setMobBar, showMobBar } = useGlobalState()
-  const [arrow, setArrow] = useState(toDown)
-
+  const [darkMode, setDarkMode] = useState()
   const parseToMs = (h, m) => (h * 60 * 60 + m * 60 - currentSeconds) * 1000
 
   const toMilliseconds = (myHour, weekDay, duration) => {
@@ -44,10 +41,12 @@ export default function Home() {
 
   useEffect(() => {
     useTask(setTask)
+    setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
   }, [d])
 
 
-  const eventTime = ({ id, weekDay, hour, duration }) => {
+
+  const eventTime = ({ id, weekDay, hour, duration, icon, name }) => {
     const element = document.getElementById(`event${id}`)
     const time = toMilliseconds(hour, weekDay, duration)
     setTimeout(() => {
@@ -61,17 +60,21 @@ export default function Home() {
       const hourToMs = parseToMs(regionHour[0], regionHour[1])
       const eventLimit = durationToMs - hourToMs
       element.style.opacity = 1
-      console.log('siuuu')
+
+      if (Notification.permission == "granted") {
+        new Notification('your event has just started', {
+          body: name,
+          icon: icon,
+          tag: name
+        }).addEventListener('click', () => window.focus())
+      }
       setTimeout(() => {
         element.style.opacity = 0.5
-        console.log('f')
       }, eventLimit);
       element.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 
     }, time);
-
   }
-
 
   const convertMin = (event) => {
     let minToHour = 0
@@ -114,16 +117,6 @@ export default function Home() {
     return verify(a1, b1)
   }
 
-  const scrollArrow = () => {
-
-    const container = document.querySelector('.eventContainer')
-    const result = container.scrollHeight - container.clientHeight
-    container.scrollBy({ top: container.scrollTop == result ? -container.scrollHeight : 305, behavior: 'smooth' })
-    if (container.scrollTop == result) setArrow(toDown)
-    else if (container.scrollTop + 305 >= result) setArrow(toUp)
-    else setArrow(toDown)
-  }
-
   const taskFilter = () => {
     const includeDay = (e) => e.weekDay.includes(weekDay.indexOf(chosenDay))
 
@@ -152,14 +145,10 @@ export default function Home() {
   const tagFilter = (array) => {
     const motionSvg = (bg, i, ad) => <motion.svg
       key={i}
-      initial={{ scale: 0 }} animate={{
-        scale: 1, transitionEnd: {
-          transition: { duration: 2 }
-        }
-      }}
+      initial={{ scale: 0 }} animate={{ scale: 1 }}
 
-      transition={{ duration: i / 5, }}
-      className={`w-3 h-1  ${ad} rounded-lg ${bg}`}
+      transition={{ duration: i / 3, }}
+      className={`w-3 h-1 sm:h-2 sm:w-5 xl:w-7 ${ad} rounded-lg ${bg}`}
     />
 
     return array.sort((a, b) => {
@@ -176,20 +165,42 @@ export default function Home() {
     return weekDay.map(e => {
       const firstThree = e.substring(0, 3).toUpperCase()
       return <input key={e} type="button" value={firstThree} onClick={() => setChosenDay(chosenDay == e ? null : e)}
-        className={`inputCheck ${chosenDay == e ? 'bg-teal-900' : ''}  hidden sm:block`} />
+        className={`selectDay ${chosenDay == e ? 'bg-teal-900 dark:bg-water-600' : ''}  hidden sm:block`} />
 
     })
   }
 
-  return <div className='h-full flex  flex-col'>
+  return <div className='wrapper m-0'>
 
-    <header className='flex items-center mb-8 justify-between  '>
+    <header className='flex items-center mb-8   justify-between'>
+      <span className='sm:hidden'> <Button props={{ icon: [gear, 'config'], action: () => setMobBar(!showMobBar) }} /></span>
 
-      <Button props={{ icon: [gear, 'config'], action: () => setMobBar(!showMobBar) }} />
+      <div className={`toggle relative m-0 hidden sm:flex ${darkMode}`}
+        onClick={() => {
+          const doc = document.documentElement;
 
-      <h1 className='text-white text-center'>{chosenDay ? chosenDay : 'Everyday'}</h1>
+          if (doc.classList.contains('dark')) {
+            doc.classList.remove('dark');
+            localStorage.theme = 'light';
+            setDarkMode('')
+          } else {
+            doc.classList.add('dark');
+            localStorage.theme = 'dark';
+            setDarkMode('night')
+          }
+        }}
+      >
+        <span className={`w-10 notch absolute rounded-full h-10`} />
+        <span>
+          <svg className="cloud sm" />
+          <svg className="cloud sm" />
+          <svg className="cloud md" />
+          <svg className="cloud lg" />
+        </span>
+      </div>
+      <h1 className='text-white'>{chosenDay ? chosenDay : 'Everyday'}</h1>
 
-      <Link to='/new' className="bg-teal-600  flex justify-center items-center rounded-lg" >
+      <Link to='/new' >
         <Button props={{ icon: [plus, 'plus'] }} />
       </Link>
 
@@ -198,42 +209,38 @@ export default function Home() {
     <div className='hidden sm:flex my-6 mt-14 justify-between'>
       {selectDay()}
       <input type="button" value="All" onClick={() => setChosenDay(null)}
-        className={`inputCheck  ${chosenDay == null ? 'bg-teal-900' : ''}  hidden lg:block`} />
+        className={`selectDay  ${chosenDay == null ? 'bg-teal-900' : ''}  hidden lg:block`} />
     </div>
 
-    <span className='flex justify-between'>
+    <span className='flex justify-between mb-3 lg:my-5'>
       <h3>Events</h3>
 
       <div className="overflow-hidden hidden relative sm:flex items-center">
         {handlerTag(tagBox, setTagBox)}
-        <span onClick={() => (setTagBox(!tagBox))} className={`border-2 hover:bg-opacity-100
-        border-teal-500 border-r-0 bg-opacity-40 z-10 w-8 h-11 rounded-l-full
-        ${chosenTag ? tagColor[chosenTag] : 'bg-gray-300'}`} />
+        <span onClick={() => (setTagBox(!tagBox))} className={`border-2 hover:bg-opacity-100 cursor-pointer
+        border-teal-500 dark:border-water-700 border-r-0 bg-opacity-40 z-10 w-8 h-11 xl:h-20 md:h-14 lg:h-16 rounded-l-full
+        ${chosenTag ? tagColor[chosenTag] : 'bg-gray-300 dark:bg-water-700'}`} />
       </div>
 
     </span>
 
-    <ul className='eventContainer flex-1 overflow-auto text-xs relative  '>
+    <ul className='overflow-scroll flex-grow'>
 
       <AnimatePresence>
         {taskFilter().sort((a, b) => sortTask(a, b)).map(e => {
           return <Link to={`/edit/${e.id}`} key={e.id}>
             <motion.li
+              initial={{ opacity: 0, x: -50 }} animate={{ opacity: 0.5, x: 0 }} whileHover={{ opacity: 1 }}
+              onLoad={() => eventTime(e)} id={`event${e.id}`} className='bg-opacity-80 event duration-[125ms] '>
 
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 0.5, x: 0 }}
-              whileHover={{ opacity: 1 }}
+              <div className='flex items-center gap-4 '>
 
-              onLoad={() => eventTime(e)} id={`event${e.id}`} className='event duration-[125ms] '>
-
-              <div className='flex items-center gap-4'>
-
-                <span className={`w-12 p-2 rounded-2xl ${e.bg}`}>
+                <span className={`w-12 p-3 sm:w-14 md:w-16 rounded-2xl lg:w-20 2xl:w-1/4 ${e.bg}`}>
                   <img src={e.icon} alt="icon" />
                 </span >
 
                 <span className='flex flex-col font-serif'>
-                  <h4 className='text-sm font-semibold md:text-xl'>{e.name}</h4>
+                  <h4 className='font-semibold'>{e.name}</h4>
 
                   <span className='flex gap-x-1'>
                     <p>{`${e.duration > 60 ? convertMin(e.duration) : `${e.duration} ${e.duration > 1 ? 'minutes' : 'minute'}`}`}</p>
@@ -248,25 +255,24 @@ export default function Home() {
               </div>
 
               <span className='flex flex-col gap-y-2 font-bold font-slab'>
-                <p className='px-2 py-1 rounded-md text-center border-e-2 border-b-2 border-teal-400' >{e.hour}</p>
-                <p className='px-2 py-1 rounded-md text-center border-e-2 border-b-2 border-teal-400'>{until(e.hour, e.duration)}</p>
+                <p className='px-2 py-1 rounded-md text-center dark:border-water-500 border-e-2 border-b-2 dark:bg-water-900' >{e.hour}</p>
+                <p className='px-2 py-1 rounded-md text-center dark:border-water-500 border-e-2 border-b-2 dark:bg-water-900'>{until(e.hour, e.duration)}</p>
               </span>
             </motion.li>
           </Link>
         })}
       </AnimatePresence>
       <Link to='/new'>
-        <button className='w-full text-sm font-extrabold bg-teal-600 items-center text-gray-100 rounded-xl p-2 flex gap-3'>
-          <img src={plus} alt="plus" className='w-10 p-2 rounded-full bg-teal-500 opacity-70' />
+        <button className='w-full font-bold bg-teal-600 dark:bg-water-800 opacity-40 duration-300 xl:p-6 hover:opacity-100 items-center text-gray-100 rounded-xl p-2 sm:p-4 flex gap-3'>
+          <img src={plus} alt="plus" className='w-10 md:w-12 xl:w-14 hover:rotate-90 duration-500 p-2 rounded-full bg-teal-500 dark:bg-water-600 opacity-70' />
           Add Event
         </button>
       </Link>
 
 
     </ul>
-
-
     <MobileBar />
+
   </div >
 
 }
