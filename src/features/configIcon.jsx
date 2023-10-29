@@ -12,13 +12,13 @@ import walking from '../assets/imgs/icons/walking.svg'
 import flag from '../assets/imgs/icons/flag.svg'
 import car from "../assets/imgs/icons/car.svg"
 
-const animalsFile = Object.values(import.meta.globEager(`../assets/imgs/icons/animals/*.png`)).map(e => e.default)
-const emojisFIle = Object.values(import.meta.globEager(`../assets/imgs/icons/emojis/*.png`)).map(e => e.default)
-const foodFile = Object.values(import.meta.globEager(`../assets/imgs/icons/foods/*.png`)).map(e => e.default)
-const routineFile = Object.values(import.meta.globEager(`../assets/imgs/icons/routine/*.png`)).map(e => e.default)
-const ideaFile = Object.values(import.meta.globEager(`../assets/imgs/icons/idea/*.png`)).map(e => e.default)
-const flagsFile = Object.values(import.meta.globEager(`../assets/imgs/icons/flags/*.png`)).map(e => e.default)
-const travelFile = Object.values(import.meta.globEager(`../assets/imgs/icons/travel/*.png`)).map(e => e.default)
+const animalsFile = Object.values(import.meta.globEager(`../assets/imgs/icons/animals/*.svg`)).map(e => e.default)
+const emojisFIle = Object.values(import.meta.globEager(`../assets/imgs/icons/emojis/*.svg`)).map(e => e.default)
+const foodFile = Object.values(import.meta.globEager(`../assets/imgs/icons/foods/*.svg`)).map(e => e.default)
+const routineFile = Object.values(import.meta.globEager(`../assets/imgs/icons/routine/*.svg`)).map(e => e.default)
+const ideaFile = Object.values(import.meta.globEager(`../assets/imgs/icons/idea/*.svg`)).map(e => e.default)
+const flagsFile = Object.values(import.meta.globEager(`../assets/imgs/icons/flags/*.svg`)).map(e => e.default)
+const travelFile = Object.values(import.meta.globEager(`../assets/imgs/icons/travel/*.svg`)).map(e => e.default)
 
 
 const iconsArray = {
