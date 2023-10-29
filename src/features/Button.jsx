@@ -64,8 +64,8 @@ export function InputName({ props }) {
       variants={labelVariants} animate={props.formConfig.name ? 'down' : 'up'} htmlFor="nameEvent"
       className="w-6/12 text-teal-400 dark:text-water-400 md:w-2/6  lg:w-1/4 py-2 absolute ">name</motion.label>
      
-    <input name="name" id="nameEvent" onChange={(e) => { props.setFormConfig({ ...props.formConfig, name: e.target.value }) }}
-      type="text" placeholder={props.formConfig.name ? props.formConfig.name : ''}
+    <input id="nameEvent" onChange={(e) => { props.setFormConfig({ ...props.formConfig, name: e.target.value }) }}
+      type="text" placeholder={props.formConfig.name ? props.formConfig.name : 'aaaaaaaaaaaaaa'}
       className="px-1 hover:cursor-text py-2 hover:scale-x-105 bg-transparent border-b-2 duration-500 cursor-default
        focus:border-green-500 dark:focus:border-water-400 outline-none w-6/12 md:w-2/6 lg:w-1/4 self-center "
     />

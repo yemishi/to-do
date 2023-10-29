@@ -1,25 +1,26 @@
 import axios from "axios"
 import Button, { InputName } from "../features/Button"
-import { useGlobalState } from "../App"
-import { del, edit } from "../features/useAxios"
-import { moreTime, selectHour, selectDuration } from "../features/store"
-import { useParams, Link, useNavigate } from "react-router-dom"
-import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
-import { useEffect } from "react"
 import cancel from '../assets/imgs/cancel.svg'
 import bin from '../assets/imgs/bin.svg'
+
+import { useGlobalState } from "../App"
+import { useEffect } from "react"
+import { useParams, Link, useNavigate } from "react-router-dom"
+
+import { moreTime, selectHour, selectDuration } from "../features/store"
+import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
 import { ButtonSaveB } from "../features/Button"
 
 export default function EditTask() {
   const { formConfig, setFormConfig, setDrag } = useGlobalState()
   const navigate = useNavigate()
-
+  const { id } = useParams()
   useEffect(() => {
     const durationDrag = [15, 30, 45, 60, 120];
 
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/tasks/${id}`);
+        const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/editUser/${localStorage.name}/${id}`);
         const draggable = document.querySelector('.draggable');
         const chosenDurationKey = durationDrag.find(e => res.data.duration == e);
 
@@ -54,8 +55,16 @@ export default function EditTask() {
     fetchData();
   }, []);
 
-  const { id } = useParams()
-
+  const editTask = () => {
+    axios.patch(`/${localStorage.name}/task/${id}`, formConfig).then((res) => console.log(res))
+  }
+  
+  const deleteTask = () => {
+    try {
+      axios.delete(`/https://node-mongodb-api-5wtv.onrender.com/editUser/${localStorage.name}/task/${id}`).then((res) => console.log(res))
+    } catch (error) {
+    }
+  }
   const convertMin = (event) => {
     let minToHour = 0
     while (event >= 60) event -= 60, minToHour++
@@ -64,7 +73,7 @@ export default function EditTask() {
   return <section className="wrapper">
 
     <header className="w-full flex mb-8 justify-between items-center">
-      <Link onClick={() => del(formConfig.id)} to='/'>
+      <Link onClick={(deleteTask)} to='/home'>
         <Button props={{ icon: [bin, 'delete'] }} />
       </Link>
       <span className="font-bold">
@@ -93,7 +102,7 @@ export default function EditTask() {
       {selectHour()}
     </div>
 
-    <Link to='/home'> <ButtonSaveB props={{ action: () => edit(id, { ...formConfig }), formConfig }} />
+    <Link to='/home'> <ButtonSaveB props={{ action: () => editTask }} />
     </Link >
   </section>
 

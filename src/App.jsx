@@ -1,20 +1,24 @@
-import { Outlet } from "react-router-dom"
-import { useContext, useState, createContext, useRef, Suspense, useEffect } from "react"
+import { Outlet, useNavigate } from "react-router-dom"
+import { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
 const GlobalStateContext = createContext();
 import { randomIcon } from "./features/configIcon";
+
 const date = new Date()
 const d = date.getDay()
 
 export const useGlobalState = () => {
   return useContext(GlobalStateContext);
 };
-export const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-export default function App() {
 
+export const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+export default function App() {
+  const navigate = useNavigate()
 
   const [chosenDay, setChosenDay] = useState(weekDay[d])
   const [showMobBar, setMobBar] = useState(false)
+  const [task, setTask] = useState([])
   const [chosenTag, setChosenTag] = useState(0)
   const [drag, setDrag] = useState(0)
   const moreTimeSeparator = useRef([0, 0])
@@ -24,6 +28,9 @@ export default function App() {
   const [currentBox, setCurrentBox] = useState(0)
   const [alertShow, alertHandler] = useCycle(0, 1)
   const [dragAlertShow, dragAlertHandler] = useCycle(0, 1)
+
+
+
   const [formConfig, setFormConfig] = useState({
     name: 'Study',
     hour: 0,
@@ -42,6 +49,11 @@ export default function App() {
     if (Notification.permission !== 'denied') {
       Notification.requestPermission()
     }
+
+    if (localStorage.name && localStorage.password) {
+      navigate('/home')
+    } else navigate('/login')
+
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
       localStorage.theme == 'dark'
@@ -58,9 +70,8 @@ export default function App() {
         <GlobalStateContext.Provider value={{
           dragAlertShow, dragAlertHandler, alertShow, alertHandler, chosenTag, setChosenTag,
           moreTimeSeparator, currentBox, drag, setDrag, setCurrentBox, formConfig, setFormConfig, chosenDay, setChosenDay,
-          showMobBar, setMobBar, iconBg, setIconBg, bundleIcon, setBundleIcon, bundleColor, setBundleColor, tags
+          showMobBar, setMobBar, iconBg, setIconBg, bundleIcon, setBundleIcon, bundleColor, setBundleColor, tags, task, setTask
         }}>
-
           <Outlet />
 
         </GlobalStateContext.Provider>

@@ -158,7 +158,7 @@ export const configIcon = () => {
   const [nameCollection, setNameCollection] = useState(foundEntry)
   const [borderPosition, setBorderPosition] = useState()
   const { formConfig, setFormConfig, bundleIcon, setBundleIcon } = useGlobalState()
-  const sideRef = useRef(0)
+
   const iconW = 'sm:w-10 md:w-12 lg:w-14 xl:w-16 2xl:w-20'
   return <motion.div
     onClick={() => setBundleIcon(false)}
@@ -180,7 +180,7 @@ export const configIcon = () => {
 
           {Object.keys(iconsArray).map(key => {
             return <img key={key} className={`w-8 hover:opacity-100 cursor-pointer p-2 md:w-9 lg:w-10 xl:w-11 2xl:w-12  ${nameCollection !== key ? 'opacity-50' : ''} duration-500`} onClick={(e) => {
-              setNameCollection(key), sideRef.current = borderPosition, setBorderPosition(e.target.offsetLeft)
+              setNameCollection(key),  setBorderPosition(e.target.offsetLeft)
             }} src={iconsArrayControl[key]} />
           })}
           <span style={{ left: borderPosition }} className={`w-8 p-2 duration-500 md:w-9 lg:w-10 xl:w-11 2xl:w-12 absolute h-0
@@ -193,8 +193,8 @@ export const configIcon = () => {
           {iconsArray[nameCollection].map(e =>
             <AnimatePresence key={e} mode="wait">
               <motion.li
-                initial={{ x: sideRef.current < borderPosition ? 200 : -200 }}
-                animate={{ x: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 className='p-2'>
                 <img className={`${iconW} sm:p-2 w-6 md-p3 cursor-pointer active:scale-90 duration-500 rounded-md hover:opacity-70`}
                   src={e} alt="icon" onClick={() => setFormConfig({ ...formConfig, demo: { ...formConfig.demo, icon: e } })} />

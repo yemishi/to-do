@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useGlobalState, weekDay } from '../App.jsx'
-import { useTask } from '../features/useAxios.js'
+import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
 import plus from '../assets/imgs/plus.svg'
 import { Link } from 'react-router-dom'
@@ -15,8 +15,8 @@ export default function Home() {
   const date = new Date()
   const d = date.getDay()
   const currentSeconds = date.getSeconds()
-  const [task, setTask] = useState([])
-  const { chosenTag, chosenDay, setChosenDay, setMobBar, showMobBar } = useGlobalState()
+
+  const { chosenTag, chosenDay, setChosenDay, setTask, setMobBar, showMobBar, task } = useGlobalState()
   const [darkMode, setDarkMode] = useState()
   const parseToMs = (h, m) => (h * 60 * 60 + m * 60 - currentSeconds) * 1000
 
@@ -40,7 +40,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    useTask(setTask)
+    axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.name, password: localStorage.password }).then((res) => {
+      setTask(res.data)
+    })
     setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
   }, [d])
 
@@ -125,13 +127,13 @@ export default function Home() {
 
         if (chosenDay) {
           const tagMatches = e.tag.some(tag => {
-            return tag.tag === chosenTag;
+            return tag === chosenTag;
           });
           return tagMatches && includeDay(e);
         }
         else {
-          return e.tag.some(ele => {
-            return ele.tag == chosenTag
+          return e.tag.some(e => {
+            return e == chosenTag
           })
         }
       })
@@ -146,17 +148,16 @@ export default function Home() {
     const motionSvg = (bg, i, ad) => <motion.svg
       key={i}
       initial={{ scale: 0 }} animate={{ scale: 1 }}
-
       transition={{ duration: i / 3, }}
       className={`w-3 h-1 sm:h-2 sm:w-5 xl:w-7 ${ad} rounded-lg ${bg}`}
     />
 
     return array.sort((a, b) => {
-      if (a.tag == chosenTag) return -1
+      if (a == chosenTag) return -1
       else return a - b
     }).map((e, i) => {
       const opacity = e.tag != chosenTag && chosenTag ? 'opacity-50' : 'opacity-100'
-      return motionSvg(e.color, i, opacity)
+      return motionSvg(tagColor[e], i, opacity)
     })
 
   }
@@ -213,10 +214,12 @@ export default function Home() {
     </div>
 
     <span className='flex justify-between mb-3 lg:my-5'>
+
       <h3>Events</h3>
 
       <div className="overflow-hidden hidden relative sm:flex items-center">
-        {handlerTag(tagBox, setTagBox)}
+        {handlerTag(tagBox)}
+
         <span onClick={() => (setTagBox(!tagBox))} className={`border-2 hover:bg-opacity-100 cursor-pointer
         border-teal-500 dark:border-water-700 border-r-0 bg-opacity-40 z-10 w-8 h-11 xl:h-20 md:h-14 lg:h-16 rounded-l-full
         ${chosenTag ? tagColor[chosenTag] : 'bg-gray-300 dark:bg-water-700'}`} />

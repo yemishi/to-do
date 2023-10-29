@@ -31,7 +31,7 @@ export default function MobileBar() {
         close: { y: 170, display: 'hidden' }
     }
     return (
-        <motion.div onClick={() => setMobBar(false)} className='backdrop-brightness-50 h-full w-full absolute left-0 top-0  items-end justify-center'
+        <motion.div onClick={() => setMobBar(false)} className='backdrop-brightness-50 z-10 h-full w-full absolute left-0 top-0  items-end justify-center'
             initial={{ opacity: 0, display: 'none' }}
             animate={showMobBar ? { display: 'flex', opacity: 1 } : { display: 'none', opacity: 0 }}
         >

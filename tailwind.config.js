@@ -11,7 +11,8 @@ module.exports = {
                 montserrat: ['Montserrat'],
             },
             boxShadow: {
-                b: '0px 9px 10px -6px   rgb(0 0 0 / 0.05)',
+                b: '0px 9px 10px -6px rgb(0 0 0 / 0.05)',
+                '3xl': '5px 20px 50px rgb(0 0 0 / 0.05)'
             },
             colors: {
                 water: {

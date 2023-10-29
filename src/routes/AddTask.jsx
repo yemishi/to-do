@@ -2,12 +2,14 @@ import { useEffect } from "react"
 import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
 import { useGlobalState, weekDay } from "../App"
 import { moreTime } from "../features/store"
-import { submitTask } from '../features/useAxios'
+
 import { Link } from "react-router-dom"
 import { selectHour, selectDuration } from "../features/store"
 import Button, { ButtonSaveB, ButtonSaveT, InputName } from "../features/Button"
+
 import cancel from '../assets/imgs/cancel.svg'
 import { tagConfig } from "../features/store"
+import axios from "axios"
 
 export default function AddTask() {
 
@@ -29,6 +31,11 @@ export default function AddTask() {
     hourDefault.classList.add('active')
 
   }, [])
+  const submitTask = () => {
+    axios.post(`/${localStorage.name}/task`, formConfig).then((res) => {
+      console.log(res)
+    })
+  }
 
   const pushDay = () => {
 

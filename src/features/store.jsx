@@ -216,7 +216,6 @@ export const moreTime = () => {
     <ul className="moreTimeContainer overflow-auto h-40 sm:h-52 md:h-56">{timeConfig(60, 'min', moreTimeSeparator)}</ul></motion.div >][currentBox]
 }
 
-
 export const selectDuration = () => {
   const { drag, setDrag, dragAlertShow, dragAlertHandler, formConfig, setFormConfig } = useGlobalState()
   const container = document.querySelector('.durationContainer')
@@ -297,10 +296,10 @@ const gradientTag = {
 export const tagConfig = () => {
   const { formConfig, tags } = useGlobalState()
   const item = (ele, bg) => {
-    const tag = { tag: ele, color: bg }
     return <span key={ele} className={`tagChoose ${bg} disabled`} onClick={(element) => {
+      console.log(formConfig.tag)
       element.target.classList.toggle('disabled');
-      formConfig.tag.some(e => e.tag == ele) ? formConfig.tag.splice(formConfig.tag.findIndex(e => e.tag == ele), 1) : formConfig.tag.push(tag)
+      formConfig.tag.some(e => e == ele) ? formConfig.tag.splice(formConfig.tag.findIndex(e => e == ele), 1) : formConfig.tag.push(ele)
     }}>
 
       <p onClick={(ele) => {
@@ -309,15 +308,16 @@ export const tagConfig = () => {
       }} className="bg-teal-700 dark:bg-water-800 cursor-pointer py-1 font-montserrat rounded-lg text-left px-3">{ele}</p>
     </span>
   }
-  return <div className="flex flex-wrap xl:justify-between xl:p-5 2xl:w-2/3 2xl:self-center rounded-2xl mt-5 gap-x-5 p-3  bg-teal-600 dark:bg-water-600">
+  return <div className="flex flex-wrap xl:justify-between xl:p-5 2xl:w-2/3 2xl:self-center rounded-2xl mt-5 gap-x-5 p-3 bg-teal-600 dark:bg-water-600">
     {tags.map(ele => item(ele, tagColor[ele]))}
   </div >
 }
 
-export const handlerTag = (bgColor) => {
+export const handlerTag = (box) => {
   const { chosenTag, setChosenTag, tags } = useGlobalState()
 
   const changeTag = (target) => {
+    console.log(target)
     if (chosenTag == target) setChosenTag(null)
     else setChosenTag(target)
   }
@@ -333,13 +333,14 @@ export const handlerTag = (bgColor) => {
     open: { x: '7%', opacity: 1 },
     close: { x: '120%', },
   }
+
   const windowWidth = window.innerWidth
   const intermediateVariant = windowWidth >= 640 ? variants : {}
   return <motion.div
     variants={intermediateVariant}
     initial={{ x: windowWidth >= 640 ? 640 : 0 }}
     transition={{ type: "tween" }}
-    animate={bgColor ? 'open' : 'close'}
+    animate={box ? 'open' : 'close'}
     className={`hidden md:py-3 md:gap-x-3 xl:py-5 bg-gradient-to-l lg:pl-8 lg:gap-x-6 sm:flex flex-row pl-4 pr-14 to-teal-800 dark:to-sky-700  justify-center 
      flex-wrap rounded-l-lg
     ${gradientTag[chosenTag] ? gradientTag[chosenTag] : 'from-gray-300 dark:from-water-800'} bg-opacity-60 py-2
