@@ -1,6 +1,5 @@
 import AlertBox from "./AlertBox"
 import { motion } from 'framer-motion'
-import { useState, useEffect } from "react"
 import { useGlobalState } from "../App"
 
 const inputTime = []

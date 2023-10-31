@@ -1,6 +1,6 @@
 import { useGlobalState, weekDay } from "../App"
 import { motion } from "framer-motion"
-import { useState } from "react"
+import React,{ useState } from "react"
 import moon from '../assets/imgs/moon.svg'
 import sun from '../assets/imgs/sun.svg'
 

@@ -1,7 +1,6 @@
-import { InputName } from "../features/Button"
 import { useNavigate } from "react-router-dom"
 import { useGlobalState } from "../App"
-import { useState } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import axios from "axios"
 

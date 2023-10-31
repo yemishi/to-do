@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 export default function ErrorPage() {
   const [test, setTest] = useState()

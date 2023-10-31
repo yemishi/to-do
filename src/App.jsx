@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom"
-import { useContext, useState, createContext, useRef, useEffect } from "react"
+import React, { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
 const GlobalStateContext = createContext();
 

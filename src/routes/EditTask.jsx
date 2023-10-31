@@ -4,7 +4,7 @@ import cancel from '../assets/imgs/cancel.svg'
 import bin from '../assets/imgs/bin.svg'
 
 import { useGlobalState } from "../App"
-import { useEffect } from "react"
+import React,{ useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 
 import { moreTime, selectHour, selectDuration } from "../features/store"

@@ -9,7 +9,7 @@ import travel from "../assets/imgs/icons/iconIllustrations/travel.svg"
 import smiley from "../assets/imgs/icons/iconIllustrations/smiley.svg"
 
 import { useGlobalState } from '../App'
-import { useState } from "react"
+import React, { useState } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 
@@ -129,7 +129,7 @@ export const configIcon = () => {
 
   const iconCategories = ["animals", "idea", "smiley", "foods", "routine", "travel", "flags"]
   const getImagePath = { animals, flags, foods, idea, routine, travel, smiley }
-  
+
   const iconW = 'sm:w-10 md:w-12 lg:w-14 xl:w-16 2xl:w-20'
   const handlerCategory = async (element) => {
 

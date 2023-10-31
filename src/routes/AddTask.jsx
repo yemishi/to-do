@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import React,{ useEffect } from "react"
 import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
 import { useGlobalState, weekDay } from "../App"
 import { moreTime } from "../features/store"
