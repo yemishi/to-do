@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom"
 import { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
 const GlobalStateContext = createContext();
-import { randomIcon } from "./features/configIcon";
 
 const date = new Date()
 const d = date.getDay()
@@ -29,18 +28,16 @@ export default function App() {
   const [alertShow, alertHandler] = useCycle(0, 1)
   const [dragAlertShow, dragAlertHandler] = useCycle(0, 1)
 
-
-
   const [formConfig, setFormConfig] = useState({
     name: 'Study',
     hour: 0,
     duration: 15,
     weekDay: [],
-    icon: randomIcon,
-    bg: 'bg-emerald-400',
+    icon: "",
+    bg: 'bg-cyan-300',
     demo: {
-      bg: 'bg-emerald-400',
-      icon: randomIcon,
+      bg: '',
+      icon: "",
     },
     tag: [],
   })
@@ -52,7 +49,7 @@ export default function App() {
 
     if (localStorage.name && localStorage.password) {
       navigate('/home')
-    } else navigate('/login')
+    } else navigate('/new')
 
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
