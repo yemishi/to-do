@@ -47,9 +47,6 @@ export default function App() {
       Notification.requestPermission()
     }
 
-    if (localStorage.name && localStorage.password) {
-      navigate('/home')
-    } else navigate('/login')
 
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
