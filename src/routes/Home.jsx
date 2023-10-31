@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useGlobalState, weekDay } from '../App.jsx'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
