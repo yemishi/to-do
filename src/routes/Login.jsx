@@ -22,6 +22,7 @@ export default function Login() {
         setFormValues({ ...formValues, [name]: value });
     }
     const handleRegister = (e) => {
+        console.log(formRegister.checkPass,formRegister.password)
         const { name, value } = e.target
         setFormRegister({ ...formRegister, [name]: value })
     }
@@ -32,22 +33,21 @@ export default function Login() {
         const numberRegex = /[0-9]/;
         const lengthRegex = /^.{7,}$/;
 
-        if (!lengthRegex.test(password)) {
+
+        if (!lengthRegex.test(v.password)) {
             errors.password = "Password must be at least 8 characters long."
         }
-        if (!uppercaseRegex.test(password)) {
+        if (!uppercaseRegex.test(v.password)) {
             errors.password = "Password must contain at least one uppercase letter."
         }
-        if (!lowercaseRegex.test(password)) {
+        if (!lowercaseRegex.test(v.password)) {
             errors.password = "Password must contain at least one lowercase letter."
         }
-        if (!numberRegex.test(password)) {
+        if (!numberRegex.test(v.password)) {
             errors.password = "Password must contain at least one number."
         }
-        if (!specialCharacterRegex.test(password)) {
-            errors.password = "Password may contain special characters, such as @, #, $, etc."
-        }
-        if (checkPassword !== password) {
+   
+        if (v.checkPass !== v.password) {
             errors.checkPass = "The camp confirm password does't the same what password"
         }
 
@@ -66,9 +66,7 @@ export default function Login() {
             errors.password = "Password needs to be at least 6 characters";
         } if (!v.checkPass) {
             errors.checkPass = "The field confirm password can't be empty"
-        } else if (v.checkPass !== formValues.password) {
-            errors.checkPass = "The field confirm password has a different password"
-        }
+        } 
         setFormErrors(errors);
     };
 
@@ -95,13 +93,12 @@ export default function Login() {
                 console.log(error)
             }
         } else {
-            e.classList.add('bg-red-300')
             console.log("you have some error")
         }
     }
     const handleSubmit = async (e) => {
         e.preventDefault()
-        validate(formValues)
+        validate(formRegister)
         if (Object.keys(formErrors).length === 0) {
             try {
                 const { name, email, password } = formRegister
