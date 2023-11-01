@@ -22,7 +22,6 @@ export default function Login() {
         setFormValues({ ...formValues, [name]: value });
     }
     const handleRegister = (e) => {
-        console.log(formRegister.checkPass,formRegister.password)
         const { name, value } = e.target
         setFormRegister({ ...formRegister, [name]: value })
     }
@@ -46,7 +45,7 @@ export default function Login() {
         if (!numberRegex.test(v.password)) {
             errors.password = "Password must contain at least one number."
         }
-   
+
         if (v.checkPass !== v.password) {
             errors.checkPass = "The camp confirm password does't the same what password"
         }
@@ -66,7 +65,7 @@ export default function Login() {
             errors.password = "Password needs to be at least 6 characters";
         } if (!v.checkPass) {
             errors.checkPass = "The field confirm password can't be empty"
-        } 
+        }
         setFormErrors(errors);
     };
 

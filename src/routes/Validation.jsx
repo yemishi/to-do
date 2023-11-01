@@ -1,12 +1,26 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import PageTransition from "../features/PageTransition"
 
 export default function Validation() {
+    const { userName } = useParams()
+    const [props, setProps] = useState({ title: "Welcome", route: "" })
+    const validateUser = async () => {
+        try {
+            const response = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/confirm/siuuu`);
+            console.log(response);
+        } catch (error) {
+
+        }
+    }
+
+    validateUser();
     const navigate = useNavigate()
     return (
         <>
-            <div className="h-full font-montserrat w-full items-center flex flex-col justify-center gap-9">
+            <div className=" h-full font-montserrat w-full items-center flex flex-col justify-center gap-9">
+                <PageTransition props={props} />
                 <h1>Account validate with successfully</h1>
                 <p className="text-lg">please click bellow to be logged</p>
                 <button onClick={() => navigate("/login")} className="rounded-xl bg-water-700 px-6  p-3 font-montserrat text-lg">Go to Login</button>
