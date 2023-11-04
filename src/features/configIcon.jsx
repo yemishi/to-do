@@ -9,7 +9,7 @@ import travel from "../assets/imgs/icons/iconIllustrations/travel.svg"
 import smiley from "../assets/imgs/icons/iconIllustrations/smiley.svg"
 
 import { useGlobalState } from '../App'
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './Button'
 
@@ -24,10 +24,10 @@ const fromBottomVariants = {
   }
 }
 const demo = (type) => {
-  const { formConfig, setFormConfig, setBundleIcon, setBundleColor } = useGlobalState()
+  const { formValues, setFormValues, setBundleIcon, setBundleColor } = useGlobalState()
   const verifyType = {
-    icon: formConfig.demo.icon == formConfig.icon || formConfig.demo.icon == '',
-    color: formConfig.demo.bg == formConfig.bg || formConfig.demo.bg == '',
+    icon: formValues.demo.icon == formValues.icon || formValues.demo.icon == '',
+    color: formValues.demo.bg == formValues.bg || formValues.demo.bg == '',
   }
 
   const variantTurnBack = {
@@ -47,10 +47,10 @@ const demo = (type) => {
         transition={{ type: "spring", damping: 10, stiffness: 200 }} whileTap={{ scale: 0.9 }}
         whileHover={{ scale: 1.1 }}
         onClick={(e) => {
-          e.preventDefault(), setFormConfig({
-            ...formConfig, demo: {
-              ...formConfig.demo, icon: formConfig.icon,
-              bg: formConfig.bg
+          e.preventDefault(), setFormValues({
+            ...formValues, demo: {
+              ...formValues.demo, icon: formValues.icon,
+              bg: formValues.bg
             }
           })
         }} >
@@ -61,9 +61,9 @@ const demo = (type) => {
 
       <Button props={{
         icon: [checked, 'confirm'], action: (e) => {
-          e.preventDefault(), setBundleIcon(false), setBundleColor(false), setFormConfig({
-            ...formConfig, icon: formConfig.demo.icon ? formConfig.demo.icon : formConfig.icon,
-            bg: formConfig.demo.bg ? formConfig.demo.bg : formConfig.bg
+          e.preventDefault(), setBundleIcon(false), setBundleColor(false), setFormValues({
+            ...formValues, icon: formValues.demo.icon ? formValues.demo.icon : formValues.icon,
+            bg: formValues.demo.bg ? formValues.demo.bg : formValues.bg
           })
         },
       }} />
@@ -74,11 +74,11 @@ const demo = (type) => {
 
       <AnimatePresence mode='wait'>
         <motion.img
-          key={formConfig.demo.icon ? formConfig.demo.icon : formConfig.bg}
+          key={formValues.demo.icon ? formValues.demo.icon : formValues.bg}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, }}
-          className={`w-16 sm:w-20 md:w-24  xl:w-28 p-3 rounded-2xl duration-500 ${formConfig.demo.bg ? formConfig.demo.bg : formConfig.bg}`}
-          src={formConfig.demo.icon ? formConfig.demo.icon : formConfig.icon} alt="icon" />
+          className={`w-16 sm:w-20 md:w-24  xl:w-28 p-3 rounded-2xl duration-500 ${formValues.demo.bg ? formValues.demo.bg : formValues.bg}`}
+          src={formValues.demo.icon ? formValues.demo.icon : formValues.icon} alt="icon" />
       </AnimatePresence>
 
     </div>
@@ -86,28 +86,30 @@ const demo = (type) => {
   </div>
 }
 
-
-
 export const selectedIcon = () => {
-  const { formConfig, setBundleIcon, setFormConfig, setBundleColor } = useGlobalState()
-  const { icon, bg, demo } = formConfig
 
+  const { formValues, setBundleIcon, setFormValues, setBundleColor } = useGlobalState()
+  const { icon, bg, demo } = formValues
 
   const collection = Object.values(import.meta.globEager(`../assets/imgs/icons/idea/*.png`)).map(e => e.default)
   const randomIcon = collection[Math.floor((Math.random() * collection.length))]
-
-  if (!icon) setFormConfig({ ...formConfig, icon: randomIcon })
-
+  useEffect(() => {
+    if (!icon) {
+      return setFormValues({ ...formValues, icon: randomIcon })
+    }
+  }, [])
   const demoStyle = `bg-teal-700 cursor-pointer border-2 border-teal-500 gap-4 flex items-center p-2 sm:p-4 lg:p-6 rounded-xl 
   dark:bg-water-600 dark:border-water-700`
+
   return (
 
     <div className='grid grid-cols-2 text-base font-title mb-7 gap-6 items-center md:text-lg sm:px-12 lg:px-32 xl:px-44 lg:text-xl'>
 
       <span onClick={(e) => { e.stopPropagation(), setBundleIcon(true) }} className={demoStyle}>
-        <img src={icon} alt="icon"
-          className={`p-2 w-9 lg:w-16 sm:w-12 md:w-14 duration-500 rounded-xl ${bg ? bg : demo.bg} `} />
+        {icon ? <img src={icon} alt="icon" className={`p-2 w-9 lg:w-16 sm:w-12 md:w-14 duration-500 rounded-xl ${bg ? bg : demo.bg} `} /> :
+          <div className="loader" />}
         <p>icon</p>
+
       </span>
 
       <span onClick={() => setBundleColor(true)} className={demoStyle}>
@@ -124,7 +126,7 @@ export const configIcon = () => {
 
   const [borderPosition, setBorderPosition] = useState(0)
   const [category, setCategory] = useState(Object.values(import.meta.globEager(`../assets/imgs/icons/animals/*.png`)).map(e => e.default))
-  const { formConfig, setFormConfig, bundleIcon, setBundleIcon } = useGlobalState()
+  const { formValues, setFormValues, bundleIcon, setBundleIcon } = useGlobalState()
 
 
   const iconCategories = ["animals", "idea", "smiley", "foods", "routine", "travel", "flags"]
@@ -200,7 +202,7 @@ export const configIcon = () => {
                 animate={{ opacity: 1 }}
                 className='p-2'>
                 <img className={`${iconW} sm:p-2 w-6 md-p3 cursor-pointer active:scale-90 duration-500 rounded-md hover:opacity-70`}
-                  src={e} alt="icon" onClick={() => setFormConfig({ ...formConfig, demo: { ...formConfig.demo, icon: e } })} />
+                  src={e} alt="icon" onClick={() => setFormValues({ ...formValues, demo: { ...formValues.demo, icon: e } })} />
               </motion.li>
             </AnimatePresence>)}
         </ul>
@@ -214,7 +216,7 @@ export const configIcon = () => {
 
 export const chooseBgColor = () => {
 
-  const { formConfig, setFormConfig, bundleColor, setBundleColor } = useGlobalState()
+  const { formValues, setFormValues, bundleColor, setBundleColor } = useGlobalState()
 
 
   const bgs = ['bg-emerald-400', 'bg-amber-300', 'bg-amber-200', 'bg-orange-300', 'bg-sky-300', 'bg-cyan-500', 'bg-cyan-400', 'bg-cyan-300', 'bg-rose-300',
@@ -238,7 +240,7 @@ export const chooseBgColor = () => {
       <span className="flex after:flex-auto justify-between flex-wrap gap-2 p-3 pb-7"  >
         {bgs.map(ele => <svg key={ele}
           className={`${ele} cursor-pointer rounded-full duration-300 hover:scale-110 active:scale-90 w-12 h-12`}
-          onClick={() => { setFormConfig({ ...formConfig, demo: { ...formConfig.demo, bg: ele } }) }} />)}
+          onClick={() => { setFormValues({ ...formValues, demo: { ...formValues.demo, bg: ele } }) }} />)}
       </span>
     </motion.div>
   </motion.div>

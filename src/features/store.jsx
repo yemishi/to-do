@@ -44,7 +44,7 @@ export const verifyLimit = (settedHour, add = 0) => {
 export const aa = 'aaa'
 
 export const selectHour = () => inputTime.map((ele) => {
-  const { formConfig, setFormConfig, } = useGlobalState()
+  const { formValues, setFormValues, } = useGlobalState()
   const handlerLiCollection = (e) => {
     e.stopPropagation()
     const collectionList = [...document.querySelectorAll('.optionHour')]
@@ -62,7 +62,7 @@ export const selectHour = () => inputTime.map((ele) => {
 
     const passedElement = (e) => {
       handlerElementClass(e, 'line-through', 'remove')
-      setFormConfig({ ...formConfig, hour: e.firstChild.value })
+      setFormValues({ ...formValues, hour: e.firstChild.value })
       e.classList.add('active')
       e.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     };
@@ -77,17 +77,17 @@ export const selectHour = () => inputTime.map((ele) => {
         if (e !== ele && e.classList.contains('active')) {
           handlerElementClass(e, 'active', 'remove')
         }
-        if (!verifyLimit(e.firstChild.value, formConfig.duration).min) {
+        if (!verifyLimit(e.firstChild.value, formValues.duration).min) {
           handlerElementClass(e, 'line-through', 'remove')
         }
       })
     }
     element.classList.add('active')
-    setFormConfig({ ...formConfig, hour: element.firstChild.value })
+    setFormValues({ ...formValues, hour: element.firstChild.value })
     clearContainer(element)
-    if (verifyLimit(element.firstChild.value, formConfig.duration).min) {
+    if (verifyLimit(element.firstChild.value, formValues.duration).min) {
       reverseCollection.find((e => {
-        if (verifyLimit(e.firstChild.value, formConfig.duration).min) {
+        if (verifyLimit(e.firstChild.value, formValues.duration).min) {
           rejectElement(e)
         }
         else {
@@ -102,7 +102,7 @@ export const selectHour = () => inputTime.map((ele) => {
     <input onClick={(e) => handlerLiCollection(e)} type='button' className="cursor-pointer" value={ele} />
     <svg onClick={(e) => handlerLiCollection(e)} width="24" height="24" fill="white">
       <path d="M16 7.328v-3.328l8 8-8 8v-3.328l-16-4.672z" /></svg>
-    <input onClick={(e) => handlerLiCollection(e)} type="button" className="cursor-pointer" value={until(ele, formConfig.duration)} />
+    <input onClick={(e) => handlerLiCollection(e)} type="button" className="cursor-pointer" value={until(ele, formValues.duration)} />
 
   </span >
 }
@@ -145,7 +145,7 @@ const timeConfig = (event, type, moreTimeSeparator) => {
 export const moreTime = () => {
   const durationCheck = document.querySelector('.draggable')
 
-  const { currentBox, setCurrentBox, moreTimeSeparator, alertShow, alertHandler, formConfig, setFormConfig } = useGlobalState()
+  const { currentBox, setCurrentBox, moreTimeSeparator, alertShow, alertHandler, formValues, setFormValues } = useGlobalState()
   return [<motion.p
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.9 }}
@@ -178,14 +178,14 @@ export const moreTime = () => {
         const container = document.querySelectorAll('.moreTimeContainer')
 
         const handleButtonClick = () => {
-          const { hour } = formConfig;
+          const { hour } = formValues;
           const targetValue = moreTimeSeparator[0] + moreTimeSeparator[1];
 
           if (verifyLimit(hour, targetValue).min) {
             for (let i = collectionHour.length - 1; i >= 0; i--) {
               if (verifyLimit(hour, collectionHour[i].value).hour) {
                 collectionHour[i].click();
-                setFormConfig({ ...formConfig, duration: moreTimeSeparator[0] + firstMin.value });
+                setFormValues({ ...formValues, duration: moreTimeSeparator[0] + firstMin.value });
                 const scrollToOptions = {
                   top: collectionHour[i].offsetTop - container[0].offsetTop,
                   behavior: 'smooth',
@@ -202,7 +202,7 @@ export const moreTime = () => {
             firstMin.click();
             setTimeout(() => alertHandler(0), 4000);
           } else {
-            setFormConfig({ ...formConfig, duration: targetValue });
+            setFormValues({ ...formValues, duration: targetValue });
             durationCheck.classList.add('hidden');
             setCurrentBox(0);
           }
@@ -216,10 +216,10 @@ export const moreTime = () => {
 }
 
 export const selectDuration = () => {
-  const { drag, setDrag, dragAlertShow, dragAlertHandler, formConfig, setFormConfig } = useGlobalState()
+  const { drag, setDrag, dragAlertShow, dragAlertHandler, formValues, setFormValues } = useGlobalState()
   const container = document.querySelector('.durationContainer')
   const durationConfig = (d, e) => {
-    if (verifyLimit(formConfig.hour, d).min) {
+    if (verifyLimit(formValues.hour, d).min) {
       dragAlertHandler(1)
       Array.from(container.childNodes).map((ele, y) => {
         if (ele.value == e.target.value) {
@@ -232,7 +232,7 @@ export const selectDuration = () => {
     } else dragAlertHandler(0)
     const draggable = document.querySelector('.draggable')
     draggable.textContent = e.target.value
-    setFormConfig({ ...formConfig, duration: d })
+    setFormValues({ ...formValues, duration: d })
     setDrag(e.target.offsetLeft)
     draggable.classList.remove('hidden')
   }
@@ -293,12 +293,12 @@ const gradientTag = {
 }
 
 export const tagConfig = () => {
-  const { formConfig, tags } = useGlobalState()
+  const { formValues, tags } = useGlobalState()
   const item = (ele, bg) => {
     return <span key={ele} className={`tagChoose ${bg} disabled`} onClick={(element) => {
-      console.log(formConfig.tag)
+      console.log(formValues.tag)
       element.target.classList.toggle('disabled');
-      formConfig.tag.some(e => e == ele) ? formConfig.tag.splice(formConfig.tag.findIndex(e => e == ele), 1) : formConfig.tag.push(ele)
+      formValues.tag.some(e => e == ele) ? formValues.tag.splice(formValues.tag.findIndex(e => e == ele), 1) : formValues.tag.push(ele)
     }}>
 
       <p onClick={(ele) => {

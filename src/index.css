@@ -24,16 +24,31 @@
     cursor: context-menu
   }
 
-  ::selection {
-    user-select: none;
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
   }
 
-  .containerError {
+
+  .bg-bubble {
     @apply absolute top-0 left-0 w-full h-full;
     background: radial-gradient(transparent 30%, #071e2f 40%, #071e33 45%, #071e36 50%, #071e3a 55%, #071e3e 60%,
         #071e42 65%, #071e46 70%, #071e49 75%, #071e4d 80%, #071e51 85%, #071e55 90%, #071e59 95%, #071e5c 100%);
     background-size: 200% 200%;
     animation: radialAnimation 20s linear infinite;
+  }
+
+  .inputStyle {
+    @apply hover:cursor-text pt-1 w-full bg-transparent border-b duration-500 cursor-default focus:border-green-500 hover:border-green-500 dark:focus:border-water-400 dark:hover:border-water-400 outline-none z-10 self-center;
+  }
+
+  .passLightOn {
+    position: relative;
+    background: linear-gradient(transparent 40%, rgba(255, 119, 0, 0.749));
+  }
+
+  .passLightOn .inputStyle {
+    @apply border-yellow-500 px-2;
   }
 
   @keyframes radialAnimation {
@@ -44,6 +59,22 @@
     100% {
       background-position: 200% 200%;
     }
+  }
+
+  @keyframes spiralBorder {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(720deg);
+    }
+  }
+
+
+  .loader {
+    @apply border-4 rounded-full w-9 h-9 lg:w-16 lg:h-16 sm:w-12 sm:h-12 md:w-14 md:h-14 border-[#ffffff63] border-t-[#076241] dark:border-t-[#00ceff];
+    animation: spiralBorder 3s linear infinite;
   }
 
   .toHome {
@@ -89,7 +120,7 @@
   }
 
   .wrapper {
-    @apply mb-24 text-xs flex flex-col h-full font-sans w-full sm:text-sm md:text-base lg:text-lg xl:text-xl;
+    @apply mb-24 flex flex-col h-full font-sans w-full;
   }
 
   .hourContainer {

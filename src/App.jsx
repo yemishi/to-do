@@ -28,7 +28,7 @@ export default function App() {
   const [alertShow, alertHandler] = useCycle(0, 1)
   const [dragAlertShow, dragAlertHandler] = useCycle(0, 1)
 
-  const [formConfig, setFormConfig] = useState({
+  const [formValues, setFormValues] = useState({
     name: 'Study',
     hour: 0,
     duration: 15,
@@ -61,10 +61,10 @@ export default function App() {
   return (
 
     <article className='text-white flex justify-center w-screen h-screen bg-gradient-to-b from-teal-700 dark:from-[#044068] dark:to-[#000000] to-transparent' >
-      <ul className='px-8 filter-none sm:px-10 md:px-12 lg:px-14 xl:px-16 2xl:px-20 pt-8 w-full h-screen overflow-auto'>
+      <ul className='px-8 filter-none sm:text-sm text-xs md:text-base lg:text-lg xl:text-xl sm:px-10 md:px-12 lg:px-14 xl:px-16 2xl:px-20 pt-8 w-full h-screen overflow-auto'>
         <GlobalStateContext.Provider value={{
           dragAlertShow, dragAlertHandler, alertShow, alertHandler, chosenTag, setChosenTag,
-          moreTimeSeparator, currentBox, drag, setDrag, setCurrentBox, formConfig, setFormConfig, chosenDay, setChosenDay,
+          moreTimeSeparator, currentBox, drag, setDrag, setCurrentBox, formValues, setFormValues, chosenDay, setChosenDay,
           showMobBar, setMobBar, iconBg, setIconBg, bundleIcon, setBundleIcon, bundleColor, setBundleColor, tags, task, setTask
         }}>
           <Outlet />

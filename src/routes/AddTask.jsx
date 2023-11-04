@@ -1,4 +1,4 @@
-import React,{ useEffect } from "react"
+import React, { useEffect } from "react"
 import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
 import { useGlobalState, weekDay } from "../App"
 import { moreTime } from "../features/store"
@@ -14,12 +14,12 @@ import axios from "axios"
 export default function AddTask() {
 
 
-  const { formConfig, setFormConfig, setDrag } = useGlobalState()
+  const { formValues, setFormValues, setDrag } = useGlobalState()
 
   useEffect(() => {
     const firstDrag = document.querySelector('.chooseDuration')
-    setFormConfig({
-      ...formConfig,
+    setFormValues({
+      ...formValues,
       duration: 15,
       name: '',
       hour: '00:00',
@@ -32,7 +32,7 @@ export default function AddTask() {
 
   }, [])
   const submitTask = () => {
-    axios.post(`/${localStorage.name}/task`, formConfig).then((res) => {
+    axios.post(`/${localStorage.name}/task`, formValues).then((res) => {
       console.log(res)
     })
   }
@@ -41,15 +41,15 @@ export default function AddTask() {
 
     const toggleWeekDay = (index) => {
 
-      if (formConfig.weekDay.includes(index)) {
-        setFormConfig({
-          ...formConfig,
-          weekDay: formConfig.weekDay.filter((day) => day !== index),
+      if (formValues.weekDay.includes(index)) {
+        setFormValues({
+          ...formValues,
+          weekDay: formValues.weekDay.filter((day) => day !== index),
         });
       } else {
-        setFormConfig({
-          ...formConfig,
-          weekDay: [...formConfig.weekDay, index],
+        setFormValues({
+          ...formValues,
+          weekDay: [...formValues.weekDay, index],
         });
       }
     };
@@ -57,7 +57,7 @@ export default function AddTask() {
     return weekDay.map((e, i) => {
       const firstThree = e.substring(0, 3).toUpperCase()
       return <input key={e} onClick={() => toggleWeekDay(i)}
-        className={`selectDay ${formConfig.weekDay.includes(i) ? 'bg-teal-700 dark:bg-water-600' : ''}`} value={firstThree} type="button" />
+        className={`selectDay ${formValues.weekDay.includes(i) ? 'bg-teal-700 dark:bg-water-600' : ''}`} value={firstThree} type="button" />
     })
   }
 
@@ -74,21 +74,21 @@ export default function AddTask() {
 
     <header className="w-full flex mb-8 justify-between items-center" >
       <Link to='/home'>
-        <ButtonSaveT props={{ action: () => submitTask({ ...formConfig }), formConfig }} />
+        <ButtonSaveT props={{ action: () => submitTask({ ...formValues }), formValues }} />
 
       </Link>
 
       <span className="font-bold">
         <h1>New Event</h1>
         <p className="text-center font-slab text-gray-200">
-          {`${formConfig.duration >= 60 ? convertMin(formConfig.duration) : `${formConfig.duration} MINUTES`} `}</p>
+          {`${formValues.duration >= 60 ? convertMin(formValues.duration) : `${formValues.duration} MINUTES`} `}</p>
       </span>
 
       <Link to='/home'>
         <Button props={{ icon: [cancel, 'cancel'] }} />
       </Link >
     </header>
-    <InputName props={{ formConfig, setFormConfig }} />
+    <InputName props={{ formValues, setFormValues, type: "name" }} />
 
     {selectedIcon()}
     {chooseBgColor()}
@@ -116,7 +116,7 @@ export default function AddTask() {
     {tagConfig()}
 
     <Link to='/home'>
-      <ButtonSaveB props={{ action: () => submitTask({ ...formConfig }), formConfig }} />
+      <ButtonSaveB props={{ action: () => submitTask({ ...formValues }), formValues }} />
     </Link>
   </form >
 

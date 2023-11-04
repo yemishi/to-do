@@ -1,82 +1,103 @@
 import { useNavigate } from "react-router-dom"
 import { useGlobalState } from "../App"
 import React, { useState } from "react"
+import { InputName } from "../features/Button"
 import { motion } from "framer-motion"
 import axios from "axios"
+
+import PageTransition from "../features/PageTransition"
 
 export default function Login() {
     localStorage.clear()
     const { setTask } = useGlobalState()
     const initialValues = { name: localStorage.name, password: localStorage.password }
     const initialRegister = { name: "", password: "", email: "", checkPass: "" }
+
     const [formRegister, setFormRegister] = useState(initialRegister)
     const [formValues, setFormValues] = useState(initialValues)
+    const [props, setProps] = useState({})
+
     const [passwordVisible, setPasswordVisible] = useState(false)
     const [saveLogin, setSaveLogin] = useState(false)
+    const [toTransition, setToTransition] = useState(false)
+
     const [formErrors, setFormErrors] = useState({})
     const [resetPass, setResetPass] = useState(false)
     const [showSign, setShowSign] = useState(true)
 
-    const handleValues = (e) => {
-        const { name, value } = e.target
-        setFormValues({ ...formValues, [name]: value });
-    }
-    const handleRegister = (e) => {
-        const { name, value } = e.target
-        setFormRegister({ ...formRegister, [name]: value })
-    }
     const validate = (v) => {
         const errors = {};
-        const uppercaseRegex = /[A-Z]/;
-        const lowercaseRegex = /[a-z]/;
-        const numberRegex = /[0-9]/;
-        const lengthRegex = /^.{7,}$/;
 
+        const validatePassword = (password) => {
+            const uppercaseRegex = /[A-Z]/;
+            const lowercaseRegex = /[a-z]/;
+            const numberRegex = /[0-9]/;
+            const lengthRegex = /^.{7,}$/;
 
-        if (!lengthRegex.test(v.password)) {
-            errors.password = "Password must be at least 8 characters long."
-        }
-        if (!uppercaseRegex.test(v.password)) {
-            errors.password = "Password must contain at least one uppercase letter."
-        }
-        if (!lowercaseRegex.test(v.password)) {
-            errors.password = "Password must contain at least one lowercase letter."
-        }
-        if (!numberRegex.test(v.password)) {
-            errors.password = "Password must contain at least one number."
-        }
+            if (!lengthRegex.test(password)) {
+                return "Password must be at least 7 characters long.";
+            }
+            if (!uppercaseRegex.test(password)) {
+                return "Password must contain at least one uppercase letter.";
+            }
+            if (!lowercaseRegex.test(password)) {
+                return "Password must contain at least one lowercase letter.";
+            }
+            if (!numberRegex.test(password)) {
+                return "Password must contain at least one number.";
+            }
 
-        if (v.checkPass !== v.password) {
-            errors.checkPass = "The camp confirm password does't the same what password"
-        }
+            return null;
+        };
 
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+        const validateEmail = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+            if (!email) {
+                return "The field email can't be empty";
+            }
+            if (!emailRegex.test(email)) {
+                return "Incorrect email";
+            }
+            return null;
+        };
+
         if (!v.name) {
             errors.name = "The field name can't be empty";
         }
+
         if (!v.email) {
-            errors.email = "The field email can't be empty";
-        } else if (!regex.test(v.email)) {
-            errors.email = "Incorrect email";
+            errors.email = validateEmail(v.email);
         }
+
         if (!v.password) {
             errors.password = "The field password can't be empty";
-        } else if (v.password.length < 6) {
-            errors.password = "Password needs to be at least 6 characters";
-        } if (!v.checkPass) {
-            errors.checkPass = "The field confirm password can't be empty"
+        } else {
+            const passwordError = validatePassword(v.password);
+            if (passwordError) {
+                errors.password = passwordError;
+            }
         }
+
+        if (!v.checkPass) {
+            errors.checkPass = "The field confirm password can't be empty";
+        } else if (v.checkPass !== v.password) {
+            errors.checkPass = "The confirm password doesn't match the password";
+        }
+
         setFormErrors(errors);
     };
 
+
     const handleLogin = async (e) => {
         e.preventDefault()
-        validate(formValues)
-        if (Object.keys(formErrors).length === 0) {
+
+        if (formValues.name && formValues.password) {
             try {
                 const { name, password } = formValues
                 const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name, password })
-                await setTask(res.data)
+                console.log(res)
+                const { data, status } = await res.response
+                const { msg, content } = data
 
                 localStorage.name = formValues.name
                 localStorage.password = formValues.password
@@ -87,26 +108,38 @@ export default function Login() {
                         localStorage.removeItem(name);
                     });
                 }
-                navigate('/home')
+                await setTask(content)
+                setProps({ msg, status, route: "/home" })
+                setToTransition(true)
+
             } catch (error) {
-                console.log(error)
+                const { msg } = await error.response.data
+                setFormErrors({ ...formErrors, data: msg })
             }
+
         } else {
-            console.log("you have some error")
+            setFormErrors({ ...formErrors, data: "All fields need to be filled in" })
         }
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         validate(formRegister)
-        if (Object.keys(formErrors).length === 0) {
+        console.log(Object.values(formErrors).length)
+        if (Object.values(formErrors).length === 0) {
             try {
                 const { name, email, password } = formRegister
                 const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/register', { name, email, password })
-                console.log(res)
+
+                const { data, status } = res
+                console.log(data.msg, status)
+                setProps({ msg: data.msg, status })
+                setToTransition(true)
+                setTimeout(() => setToTransition(false), 4000)
             } catch (error) {
                 console.log(error)
             }
-        } else console.log("you have some error")
+        } else console.log(formErrors)
 
     }
     const formVariants = {
@@ -117,15 +150,22 @@ export default function Login() {
     const handlerResetPass = async () => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
         if (!formValues.email) {
-            setFormErrors({ ...formErrors, email: "The field email can't be empty" });
+            setFormErrors({ ...formErrors, data: "The field email can't be empty" });
         } else if (!regex.test(formValues.email)) {
-            setFormErrors({ ...formErrors, email: "Incorrect email" })
+            setFormErrors({ ...formErrors, data: "Incorrect email" })
         } else {
             try {
-                await axios.patch(`https://node-mongodb-api-5wtv.onrender.com/forgotPassword/${formValues.email}`).then((res) => console.log(res.msg))
+
+                const res = await axios.post(`https://node-mongodb-api-5wtv.onrender.com/forgotPassword/${formValues.email}`)
+                console.log('aaaaa')
+                const { data, status } = res.response
+                setProps({ msg: data.msg, status })
+
+                setToTransition(true)
+                setTimeout(() => setToTransition(false), 6000)
                 setResetPass(false)
             } catch (error) {
-                console.log(error.message)
+                setFormErrors({ ...formErrors, data: error.response.data.msg })
             }
         }
     }
@@ -138,95 +178,88 @@ export default function Login() {
         closeD: { opacity: 0, top: "-100%" }
     }
 
-    const errorStyle = "text-red-400 font-bold text-sm"
-    const inputStyle = 'bg-[#0d4f75] bg-opacity-50 backdrop-brightness-125 w-9/12 focus:bg-opacity-100  duration-500 p-2 rounded-md outline-none'
-
-    const navigate = useNavigate()
+    const errorStyle = "text-red-400"
 
     return (
         <div className="w-full h-full flex justify-center items-center  absolute left-0 top-0">
+            {toTransition ? <PageTransition props={props} /> : null}
             <div className="relative shadow-3xl overflow-hidden bg-gradient-to-b h-[32rem] w-[22rem] shadow-black">
 
-                <motion.div onClick={() => setResetPass(false)} animate={resetPass ? "showF" : "closeF"} variants={resetPassVariants} className="backdrop-blur-md absolute h-full z-10 w-full left-0 right-0">
-
+                <motion.div onClick={() => setResetPass(false)} animate={resetPass ? "showF" : "closeF"} variants={resetPassVariants}
+                    className="backdrop-blur-md absolute h-full z-20 w-full left-0 right-0">
                     <motion.div onClick={(e) => e.stopPropagation()} animate={resetPass ? "showD" : "closeD"} variants={resetPassVariants}
-                        className="z-10 w-full font-montserrat py-5  bg-[#1e507975] rounded-b-3xl absolute
-                     flex items-center  flex-col justify-center left-0">
-                        <p className={`${errorStyle} ml-10 self-start`}>{formErrors.email}</p>
+                        className="z-10 w-full font-montserrat bg-[#1e507975] rounded-b-3xl absolute
+                        flex items-center flex-col justify-center left-0">
                         <span className="flex items-center px-8 gap-5">
-                            <input className={`${inputStyle} py-2 `} onChange={handleValues} name="email" type="text" placeholder={formValues.email ? formValues.email : "email"} />
+                            <span className=" p-0 mb-5  ">
+                                <InputName props={{ formValues, setFormValues, type: "text", element: "email" }} />
+                                <p className={`${errorStyle} `}>{formErrors.data}</p>
+                            </span>
                             <button onClick={handlerResetPass} className="bg-[#054d7d] font-mono px-2 py-1 rounded-lg">Send</button>
                         </span>
                     </motion.div>
 
                 </motion.div>
                 <motion.form animate={showSign ? "show" : "close"} variants={formVariants} transition={{ duration: 0.5 }}
-                    className="absolute pt-5 font-montserrat flex w-full gap-3  flex-col items-center rounded-lg">
+                    className="absolute pt-5  font-montserrat flex w-full flex-col items-center rounded-lg">
 
-                    <h1 className={showSign ? "text-2xl" : "text-xl"} onClick={() => setShowSign(true)}>Login in</h1>
+                    <h1 className={showSign ? "text-2xl" : "text-xl"} onClick={() => { setShowSign(true), setFormErrors({ ...formErrors, data: false }) }}>Login in</h1>
 
-                    <input type="text" className={inputStyle} name="name" onChange={handleValues} placeholder="name" />
+                    <InputName props={{ formValues, setFormValues, type: "text", element: "name" }} />
 
-                    <span className="w-9/12 flex items-center">
 
-                        <input type={passwordVisible ? "text" : "password"} className={inputStyle}
-                            name="password" onChange={handleValues} placeholder="password" />
+                    <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} overflow-hidden`}>
+                        <InputName props={{ formValues, setFormValues, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
 
-                        <span className={`w-3 h-8 border bg-[#092e44f7] cursor-pointer duration-500  border-l-0 ${passwordVisible ? "border-[#18567f]" :
-                            "border-[#1a3e56b6]"} relative rounded-r-xl `}
-                            onClick={() => setPasswordVisible(!passwordVisible)} >
-                            <svg className={`w-1 h-1 right-1 duration-500 ${passwordVisible ? "bg-[#398dc4]" : "bg-[#183b53]"} rounded-full absolute top-2`} />
-                            <svg className={`w-1 h-1 right-1 duration-500 ${passwordVisible ? "bg-[#3b86b8]" : "bg-[#183b53]"} rounded-full absolute bottom-2`} />
-                        </span>
+                    <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
+                        "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
+                        onClick={() => setPasswordVisible(!passwordVisible)} >
                     </span>
 
-                    <span className="flex w-9/12 text-xs gap-1 items-center ">
 
-                        <input type="checkbox" id="saveUser" onClick={() => setSaveLogin(!saveLogin)}
-                            className={`w-4 h-4 appearance-none outline-none duration-500 rounded-sm bg-[#0d4f75] ${saveLogin ? "bg-opacity-100" : "bg-opacity-40"}`}
-                        />
-                        <label htmlFor="saveUser" className={`${saveLogin ? "brightness-100" : "brightness-50"} duration-500`}>
+
+                    <div className="flex w-6/12 flex-col text-xs gap-4 my-4 items-center ">
+
+                        <p onClick={() => setSaveLogin(!saveLogin)} className={`cursor-pointer self-end font-mono bg-gradient-to-t from-cyan-400 to-50% p-1 px-2 rounded-xl  ${saveLogin ? "brightness-100" : "brightness-50"} duration-500`}>
                             Remember me
-                        </label>
+                        </p>
+                    </div>
 
-                        <p className="ml-auto text-red-300 cursor-pointer" onClick={() => setResetPass(true)}>Forgot Password ?</p>
-                    </span>
-                    <button onClick={handleLogin} className="backdrop-brightness-125 hover:backdrop-brightness-200 duration-500 w-2/4 rounded-lg p-1 mt-3">Login</button>
+                    <button onClick={handleLogin} className="backdrop-brightness-125 hover:backdrop-brightness-200 duration-500  rounded-lg py-1 px-7 mt-3">Login</button>
+
+                    <p className=" text-red-300 mt-5 cursor-pointer" onClick={() => { setFormErrors({}), setResetPass(true) }}>Forgot Password ?</p>
+
                     <span className="w-9/12 flex flex-col justify-end items-end mt-5">
-
-                        <p className={errorStyle}>{formErrors.name}</p>
-                        <p className={errorStyle}>{formErrors.password}</p>
-
+                        <p className={errorStyle}>{formErrors.data ? formErrors.data : ""}</p>
                     </span>
                 </motion.form>
 
                 <motion.form animate={showSign ? "close" : "show"} initial={{ top: "-100%" }} variants={formVariants} transition={{ duration: 0.5 }}
-                    className="absolute pt-5 font-montserrat flex w-full gap-3 flex-col items-center rounded-lg">
+                    className="absolute pt-5 font-montserrat flex w-full  flex-col items-center rounded-lg">
 
-                    <h1 onClick={() => setShowSign(false)} className={showSign ? "text-lg" : "text-2xl"}>Sign up </h1>
-
-                    <input type="text" name="email" className={inputStyle} onChange={handleRegister} placeholder="email" />
-                    <input type="text" name="name" className={inputStyle} onChange={handleRegister} placeholder="name" />
-
-                    <span className="w-9/12 flex items-center">
-                        <input type={passwordVisible ? "text" : "password"} className={inputStyle}
-                            name="password" onChange={handleRegister} placeholder="password" />
-                        <span className={`w-3 h-8 border cursor-pointer duration-500  border-l-0 ${passwordVisible ? "backdrop-brightness-150 border-[#18567f]" : "backdrop-brightness-90 border-[#1a3e56b6]"} relative rounded-r-xl `}
-                            onClick={() => setPasswordVisible(!passwordVisible)} >
-                            <svg className={`w-1 h-1 right-1 duration-500 ${passwordVisible ? "bg-[#398dc4]" : "bg-[#183b53]"} rounded-full absolute top-2`} />
-                            <svg className={`w-1 h-1 right-1 duration-500 ${passwordVisible ? "bg-[#3b86b8]" : "bg-[#183b53]"} rounded-full absolute bottom-2`} />
-                        </span>
+                    <h1 onClick={() => { setShowSign(false), setFormErrors({ ...formErrors, data: false }) }} className={showSign ? "text-lg" : "text-2xl"}>Sign up</h1>
+                    <span className="w-6/12 ">
+                        <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "email" }} />
                     </span>
-                    <input type="password" className={inputStyle} placeholder="confirm password" name="checkPass" onChange={handleRegister} />
 
-                    <button onClick={handleSubmit} className="backdrop-brightness-125 hover:backdrop-brightness-200 duration-500 w-2/4 rounded-lg p-1 mt-3">Submit</button>
+                    <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "name" }} />
+
+
+                    <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} overflow-hidden`}>
+                        <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
+
+                    <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
+                        "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
+                        onClick={() => setPasswordVisible(!passwordVisible)} >
+                    </span>
+
+                    <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "password", element: "checkPass" }} />
+
+                    <button onClick={handleSubmit} name="register" className=" backdrop-brightness-125 hover:backdrop-brightness-200 duration-500 rounded-lg py-1 px-7 mt-6">Submit</button>
                     <span className="w-9/12 flex flex-col justify-end items-end mt-5">
-
-                        <p className={errorStyle}>{formErrors.email}</p>
-                        <p className={errorStyle}>{formErrors.name}</p>
-                        <p className={errorStyle}>{formErrors.password}</p>
-                        <p className={errorStyle}>{formErrors.checkPass}</p>
+                        <p className={errorStyle}>{formErrors ? Object.values(formErrors)[0] : ""}</p>
                     </span>
+
                 </motion.form>
 
             </div>
