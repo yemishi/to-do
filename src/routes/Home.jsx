@@ -9,7 +9,7 @@ import MobileBar from '../features/MobileBar.jsx'
 import Button from '../features/FormToolkit.jsx'
 
 import plus from '../assets/imgs/plus.svg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import goback from '../assets/imgs/goback.svg'
 import gear from '../assets/imgs/gear.svg'
 
@@ -23,6 +23,7 @@ export default function Home() {
   const [darkMode, setDarkMode] = useState()
   const parseToMs = (h, m) => (h * 60 * 60 + m * 60 - currentSeconds) * 1000
 
+  const navigate = useNavigate()
   const toMilliseconds = (myHour, weekDay, duration) => {
 
     const currentTime = `${date.getHours() > 9 ? date.getHours() :
@@ -46,8 +47,9 @@ export default function Home() {
     axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.name, password: localStorage.password }).then((res) => {
       setTask(res.data.content)
     })
-    
+
     setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
+    if (!localStorage.password && !localStorage.name) navigate("/login")
   }, [d])
 
 
