@@ -1,7 +1,7 @@
 import goback from "../assets/imgs/goback.svg"
 import checked from "../assets/imgs/checked.svg"
 import animals from "../assets/imgs/icons/iconIllustrations/animals.svg"
-import flags from "../assets/imgs/icons/iconIllustrations/flags.svg"
+
 import foods from "../assets/imgs/icons/iconIllustrations/foods.svg"
 import idea from "../assets/imgs/icons/iconIllustrations/idea.svg"
 import routine from "../assets/imgs/icons/iconIllustrations/routine.svg"
@@ -9,9 +9,9 @@ import travel from "../assets/imgs/icons/iconIllustrations/travel.svg"
 import smiley from "../assets/imgs/icons/iconIllustrations/smiley.svg"
 
 import { useGlobalState } from '../App'
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
-import Button from './Button'
+import Button from './FormToolkit'
 
 const fromBottomVariants = {
   open: {
@@ -129,8 +129,8 @@ export const configIcon = () => {
   const { formValues, setFormValues, bundleIcon, setBundleIcon } = useGlobalState()
 
 
-  const iconCategories = ["animals", "idea", "smiley", "foods", "routine", "travel", "flags"]
-  const getImagePath = { animals, flags, foods, idea, routine, travel, smiley }
+  const iconCategories = ["animals", "idea", "smiley", "foods", "routine", "travel"]
+  const getImagePath = { animals, foods, idea, routine, travel, smiley }
 
   const iconW = 'sm:w-10 md:w-12 lg:w-14 xl:w-16 2xl:w-20'
   const handlerCategory = async (element) => {
@@ -152,8 +152,6 @@ export const configIcon = () => {
           break;
         case "travel": setCategory(Object.values(import.meta.globEager(`../assets/imgs/icons/travel/*.png`)).map(e => e.default));
           break;
-        case "flags": setCategory(Object.values(import.meta.globEager(`../assets/imgs/icons/flags/*.png`)).map(e => e.default));
-          break;
 
         default:
           break;
@@ -163,14 +161,26 @@ export const configIcon = () => {
       console.log("something doest working here")
     }
   }
+  const handleClick = useCallback((e) => {
+    setFormValues({ ...formValues, demo: { ...formValues.demo, icon: e } });
+  }, [formValues.demo]);
 
 
+  const categoryElements = useMemo(() => (
+    category.map((e) => (
+      <motion.li key={e} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className='p-2'>
+        <img className={`${iconW} sm:p-2 w-6 md-p3 cursor-pointer active:scale-90 duration-500 rounded-md hover:opacity-70`}
+          src={e} alt="icon" onClick={() => handleClick(e)} />
+      </motion.li>
+    ))
+
+  ), [category, iconW, handleClick]);
 
   return <motion.div
     onClick={() => setBundleIcon(false)} initial={{ display: 'none' }}
     animate={bundleIcon ? { display: 'flex', opacity: 1 } : { display: 'none', opacity: 0 }}
-
     className="bg-opacity-50 z-20 items-end backdrop-brightness-50 h-full absolute bottom-0 left-0 right-0">
+
     <motion.div
       onClick={(e) => e.stopPropagation()} transition={{ type: "tween" }} animate={bundleIcon ? 'open' : 'closed'}
       variants={fromBottomVariants}
@@ -193,19 +203,10 @@ export const configIcon = () => {
 
         </nav>
 
-        <ul className='flex after:flex-auto justify-between h-72 overflow-scroll flex-wrap '>
-
-          {category.map(e =>
-            <AnimatePresence key={e} mode="wait">
-              <motion.li
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className='p-2'>
-                <img className={`${iconW} sm:p-2 w-6 md-p3 cursor-pointer active:scale-90 duration-500 rounded-md hover:opacity-70`}
-                  src={e} alt="icon" onClick={() => setFormValues({ ...formValues, demo: { ...formValues.demo, icon: e } })} />
-              </motion.li>
-            </AnimatePresence>)}
+        <ul className='flex after:flex-auto justify-between h-72 overflow-scroll flex-wrap'>
+          {categoryElements}
         </ul>
+
       </div>
 
     </motion.div >
@@ -217,7 +218,6 @@ export const configIcon = () => {
 export const chooseBgColor = () => {
 
   const { formValues, setFormValues, bundleColor, setBundleColor } = useGlobalState()
-
 
   const bgs = ['bg-emerald-400', 'bg-amber-300', 'bg-amber-200', 'bg-orange-300', 'bg-sky-300', 'bg-cyan-500', 'bg-cyan-400', 'bg-cyan-300', 'bg-rose-300',
     'bg-violet-400', 'bg-emerald-500', 'bg-amber-500', 'bg-emerald-300', 'bg-indigo-400', 'bg-indigo-300', 'bg-blue-400',

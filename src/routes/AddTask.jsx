@@ -5,7 +5,7 @@ import { moreTime } from "../features/store"
 
 import { Link } from "react-router-dom"
 import { selectHour, selectDuration } from "../features/store"
-import Button, { ButtonSaveB, ButtonSaveT, InputName } from "../features/Button"
+import Button, { ButtonSaveB, ButtonSaveT, Input } from "../features/FormToolkit"
 
 import cancel from '../assets/imgs/cancel.svg'
 import { tagConfig } from "../features/store"
@@ -88,7 +88,10 @@ export default function AddTask() {
         <Button props={{ icon: [cancel, 'cancel'] }} />
       </Link >
     </header>
-    <InputName props={{ formValues, setFormValues, type: "name" }} />
+
+    <span className="mb-6 w-6/12 md:w-2/6 lg:w-1/4 self-center">
+      <Input props={{ formValues, setFormValues, type: "text", element: "name" }} />
+    </span>
 
     {selectedIcon()}
     {chooseBgColor()}

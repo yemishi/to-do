@@ -1,15 +1,15 @@
 import axios from "axios"
-import Button, { InputName } from "../features/Button"
+import Button, { Input } from "../features/FormToolkit"
 import cancel from '../assets/imgs/cancel.svg'
 import bin from '../assets/imgs/bin.svg'
 
 import { useGlobalState } from "../App"
-import React,{ useEffect } from "react"
+import React, { useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 
 import { moreTime, selectHour, selectDuration } from "../features/store"
 import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
-import { ButtonSaveB } from "../features/Button"
+import { ButtonSaveB } from "../features/FormToolkit"
 
 export default function EditTask() {
   const { formConfig, setFormConfig, setDrag } = useGlobalState()
@@ -58,7 +58,7 @@ export default function EditTask() {
   const editTask = () => {
     axios.patch(`/${localStorage.name}/task/${id}`, formConfig).then((res) => console.log(res))
   }
-  
+
   const deleteTask = () => {
     try {
       axios.delete(`/https://node-mongodb-api-5wtv.onrender.com/editUser/${localStorage.name}/task/${id}`).then((res) => console.log(res))
@@ -86,8 +86,10 @@ export default function EditTask() {
       </Link>
     </header>
 
-    <InputName props={{ formConfig, setFormConfig }} />
 
+    <span className="mb-6 w-6/12 md:w-2/6 lg:w-1/4 self-center">
+      <Input props={{ formValues: formConfig, setFormValues: setFormConfig, type: "text", element: "name" }} />
+    </span>
     {selectedIcon()}
     {chooseBgColor()}
     {configIcon()}

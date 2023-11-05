@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { useGlobalState } from "../App"
 import React, { useState } from "react"
-import { InputName } from "../features/Button"
+import { Input } from "../features/FormToolkit.jsx"
 import { motion } from "framer-motion"
 import axios from "axios"
 
@@ -192,7 +192,7 @@ export default function Login() {
                         flex items-center flex-col justify-center left-0">
                         <span className="flex items-center px-8 gap-5">
                             <span className=" p-0 mb-5  ">
-                                <InputName props={{ formValues, setFormValues, type: "text", element: "email" }} />
+                                <Input props={{ formValues, setFormValues, type: "text", element: "email" }} />
                                 <p className={`${errorStyle} `}>{formErrors.data}</p>
                             </span>
                             <button onClick={handlerResetPass} className="bg-[#054d7d] font-mono px-2 py-1 rounded-lg">Send</button>
@@ -201,26 +201,30 @@ export default function Login() {
 
                 </motion.div>
                 <motion.form animate={showSign ? "show" : "close"} variants={formVariants} transition={{ duration: 0.5 }}
-                    className="absolute pt-5  font-montserrat flex w-full flex-col items-center rounded-lg">
+                    className="absolute pt-5 gap-4 font-montserrat flex w-full flex-col items-center rounded-lg">
 
                     <h1 className={showSign ? "text-2xl" : "text-xl"} onClick={() => { setShowSign(true), setFormErrors({ ...formErrors, data: false }) }}>Login in</h1>
 
-                    <InputName props={{ formValues, setFormValues, type: "text", element: "name" }} />
-
-
-                    <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} overflow-hidden`}>
-                        <InputName props={{ formValues, setFormValues, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
-
-                    <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
-                        "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
-                        onClick={() => setPasswordVisible(!passwordVisible)} >
+                    <span className="mt-4">
+                        <Input props={{ formValues, setFormValues, type: "text", element: "name" }} />
                     </span>
 
+                    <div className="flex flex-col items-center">
 
+                        <span className={`duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""}`}>
+                            <Input props={{ formValues, setFormValues, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
+
+                        <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
+                            "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
+                            onClick={() => setPasswordVisible(!passwordVisible)} >
+                        </span>
+
+                    </div>
 
                     <div className="flex w-6/12 flex-col text-xs gap-4 my-4 items-center ">
 
-                        <p onClick={() => setSaveLogin(!saveLogin)} className={`cursor-pointer self-end font-mono bg-gradient-to-t from-cyan-400 to-50% p-1 px-2 rounded-xl  ${saveLogin ? "brightness-100" : "brightness-50"} duration-500`}>
+                        <p onClick={() => setSaveLogin(!saveLogin)} className={`cursor-pointer self-end font-mono bg-gradient-to-t
+                         from-cyan-400 to-50% p-1 px-2 rounded-xl hover:brightness-75 ${saveLogin ? "brightness-100" : "brightness-50"} duration-500`}>
                             Remember me
                         </p>
                     </div>
@@ -235,25 +239,28 @@ export default function Login() {
                 </motion.form>
 
                 <motion.form animate={showSign ? "close" : "show"} initial={{ top: "-100%" }} variants={formVariants} transition={{ duration: 0.5 }}
-                    className="absolute pt-5 font-montserrat flex w-full  flex-col items-center rounded-lg">
+                    className="absolute pt-5 gap-4 font-montserrat flex w-full  flex-col items-center rounded-lg">
 
                     <h1 onClick={() => { setShowSign(false), setFormErrors({ ...formErrors, data: false }) }} className={showSign ? "text-lg" : "text-2xl"}>Sign up</h1>
-                    <span className="w-6/12 ">
-                        <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "email" }} />
+
+                    <span className="w-6/12 mt-4 ">
+                        <Input props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "email" }} />
                     </span>
 
-                    <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "name" }} />
+                    <Input props={{ formValues: formRegister, setFormValues: setFormRegister, type: "text", element: "name" }} />
 
+                    <div className="flex items-center flex-col">
 
-                    <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} overflow-hidden`}>
-                        <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
+                        <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} `}>
+                            <Input props={{ formValues: formRegister, setFormValues: setFormRegister, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
 
-                    <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
-                        "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
-                        onClick={() => setPasswordVisible(!passwordVisible)} >
-                    </span>
+                        <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
+                            "from-red-400 to-transparent border-yellow-600"} relative rounded-b-xl`}
+                            onClick={() => setPasswordVisible(!passwordVisible)} >
+                        </span>
 
-                    <InputName props={{ formValues: formRegister, setFormValues: setFormRegister, type: "password", element: "checkPass" }} />
+                    </div>
+                    <Input props={{ formValues: formRegister, setFormValues: setFormRegister, type: "password", element: "checkPass" }} />
 
                     <button onClick={handleSubmit} name="register" className=" backdrop-brightness-125 hover:backdrop-brightness-200 duration-500 rounded-lg py-1 px-7 mt-6">Submit</button>
                     <span className="w-9/12 flex flex-col justify-end items-end mt-5">

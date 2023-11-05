@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { useGlobalState, weekDay } from '../App.jsx'
 import axios from 'axios'
+
+import React, { useState, useEffect } from 'react'
+
+import { useGlobalState, weekDay } from '../App.jsx'
 import { motion, AnimatePresence } from 'framer-motion'
-import plus from '../assets/imgs/plus.svg'
-import { Link } from 'react-router-dom'
-import Button from '../features/Button.jsx'
-import goback from '../assets/imgs/goback.svg'
 import { handlerTag, tagColor } from '../features/store.jsx'
 import MobileBar from '../features/MobileBar.jsx'
+import Button from '../features/FormToolkit.jsx'
+
+import plus from '../assets/imgs/plus.svg'
+import { Link } from 'react-router-dom'
+import goback from '../assets/imgs/goback.svg'
 import gear from '../assets/imgs/gear.svg'
 
 export default function Home() {
@@ -41,8 +44,9 @@ export default function Home() {
 
   useEffect(() => {
     axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.name, password: localStorage.password }).then((res) => {
-      setTask(res.data)
+      setTask(res.data.content)
     })
+    
     setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
   }, [d])
 

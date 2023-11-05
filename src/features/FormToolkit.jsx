@@ -58,9 +58,11 @@ export function ButtonSaveT({ props }) {
   </motion.button>
 }
 
-export function InputName({ props }) {
+export function Input({ props }) {
+
   const { formValues, setFormValues, element, type } = props
-  return <span className={`flex flex-col ${formValues[element] ? 'mt-7' : 'mt-4'} relative duration-500 font-bold`}>
+
+  return <span className={`flex flex-col relative duration-500 font-bold`}>
     <motion.label
       initial={'up'}
       variants={labelVariants} animate={formValues[element] ? 'down' : 'up'} htmlFor="nameEvent"
