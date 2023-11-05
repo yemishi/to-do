@@ -7,7 +7,7 @@ export default function PageTransition({ props }) {
     const navigate = useNavigate()
     const [visible, setVisible] = useState("hidden")
     const boxStyle = `text-2xl flex justify-center font-mono border-opacity-30 bg-opacity-25 border-y-2  py-6 w-full text-center  ${status == 200 ?
-        " text-emerald-300 bg-emerald-900 border-emerald-800" : "text-emerald-300 bg-emerald-900 border-emerald-800 "}`
+        " text-emerald-300 bg-emerald-900 border-emerald-800" : "text-red-300 bg-red-900 border-red-800 "}`
     return (
         <motion.div
             initial={{ opacity: 0, scale: 1 }}

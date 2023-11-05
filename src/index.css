@@ -43,12 +43,11 @@
   }
 
   .passLightOn {
-    position: relative;
     background: linear-gradient(transparent 40%, rgba(255, 119, 0, 0.749));
   }
 
   .passLightOn .inputStyle {
-    @apply border-yellow-500 px-2;
+    @apply border-yellow-500 ;
   }
 
   @keyframes radialAnimation {

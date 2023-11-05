@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 import { useGlobalState } from "../App"
 import React, { useState } from "react"
 import { Input } from "../features/FormToolkit.jsx"
@@ -191,7 +190,7 @@ export default function Login() {
                         className="z-10 w-full font-montserrat bg-[#1e507975] rounded-b-3xl absolute
                         flex items-center flex-col justify-center left-0">
                         <span className="flex items-center px-8 gap-5">
-                            <span className=" p-0 mb-5  ">
+                            <span className=" my-5  ">
                                 <Input props={{ formValues, setFormValues, type: "text", element: "email" }} />
                                 <p className={`${errorStyle} `}>{formErrors.data}</p>
                             </span>
@@ -209,9 +208,9 @@ export default function Login() {
                         <Input props={{ formValues, setFormValues, type: "text", element: "name" }} />
                     </span>
 
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col  items-center">
 
-                        <span className={`duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""}`}>
+                        <span className={`duration-300 ${passwordVisible ? "passLightOn" : ""}`}>
                             <Input props={{ formValues, setFormValues, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
 
                         <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :
@@ -251,7 +250,7 @@ export default function Login() {
 
                     <div className="flex items-center flex-col">
 
-                        <span className={` duration-300 ${passwordVisible ? "passLightOn rounded-b-2xl" : ""} `}>
+                        <span className={` duration-300 ${passwordVisible ? "passLightOn" : ""} `}>
                             <Input props={{ formValues: formRegister, setFormValues: setFormRegister, type: passwordVisible ? "text" : "password", element: "password" }} /></span>
 
                         <span className={`w-8 h-2 border border-t-0 z-10 bg-gradient-to-t cursor-pointer duration-500 border-l ${passwordVisible ? "from-red-700 to-yellow-500 border-yellow-500" :

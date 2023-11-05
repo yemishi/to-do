@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import React, { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
 const GlobalStateContext = createContext();
@@ -13,7 +13,6 @@ export const useGlobalState = () => {
 export const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 export default function App() {
-  const navigate = useNavigate()
 
   const [chosenDay, setChosenDay] = useState(weekDay[d])
   const [showMobBar, setMobBar] = useState(false)
@@ -46,10 +45,6 @@ export default function App() {
     if (Notification.permission !== 'denied') {
       Notification.requestPermission()
     }
-    if (localStorage.name && localStorage.password) {
-      navigate("/home")
-    } else navigate("/login")
-
 
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
