@@ -10,7 +10,7 @@ export default function Validation() {
 
     const validateUser = async () => {
         try {
-            const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/confirm/${userName}`);
+            const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/confirm`);
             const { data, status } = res.response
             setProps({ msg: data.msg, status, route: "/login" })
             return
