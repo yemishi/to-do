@@ -7,10 +7,14 @@ export default function Validation() {
 
     const { userName } = useParams()
     const [props, setProps] = useState({})
-
     const validateUser = async () => {
         try {
-            const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/confirm`);
+            const token = new URLSearchParams(window.location.search).get("token");
+
+            const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/confirm?token=${token}`);
+
+
+       
             const { data, status } = res.response
             setProps({ msg: data.msg, status, route: "/login" })
             return
