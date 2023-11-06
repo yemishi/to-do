@@ -27,7 +27,7 @@ const router = createBrowserRouter([
         path: '/home',
         element: <Home />
       }, {
-        path: '/Validation/:userName',
+        path: '/validation/:userName?',
         element: <Validation />
       },
       {
