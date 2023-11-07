@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom"
 import React, { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
+import PageTransition from "./features/PageTransition";
+
 const GlobalStateContext = createContext();
 
 const date = new Date()
@@ -15,21 +17,25 @@ export const weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", 
 export default function App() {
 
   const [chosenDay, setChosenDay] = useState(weekDay[d])
-  const [showMobBar, setMobBar] = useState(false)
   const [task, setTask] = useState([])
   const [chosenTag, setChosenTag] = useState(0)
   const [drag, setDrag] = useState(0)
   const moreTimeSeparator = useRef([0, 0])
+
+  const [showMobBar, setMobBar] = useState(false)
   const [bundleIcon, setBundleIcon] = useState(false)
   const [bundleColor, setBundleColor] = useState(false)
+
+  const [transitionState, setTransitionState] = useState({ msg: "", status: 200, isTransition: false, route: false })
+
   const [iconBg, setIconBg] = useState(false)
   const [currentBox, setCurrentBox] = useState(0)
   const [alertShow, alertHandler] = useCycle(0, 1)
   const [dragAlertShow, dragAlertHandler] = useCycle(0, 1)
 
   const [formValues, setFormValues] = useState({
-    name: 'Study',
-    hour: 0,
+    name: '',
+    hour: "00:00",
     duration: 15,
     weekDay: [],
     icon: "",
@@ -38,20 +44,23 @@ export default function App() {
       bg: '',
       icon: "",
     },
-    tag: [],
+    tags: [],
   })
   const tags = ['Leisure', 'Work', 'Study', 'Meal', 'Commute', 'Chores', 'Break']
   useEffect(() => {
     if (Notification.permission !== 'denied') {
       Notification.requestPermission()
     }
+    if (!localStorage.password || !localStorage.name) {
+      setTransitionState({ msg: "please log in first", status: 401, route: "/login", isTransition: true })
+    }
 
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem("theme") === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
-      localStorage.theme == 'dark'
+      localStorage.setItem("theme", 'dark')
     } else {
       document.documentElement.classList.remove('dark')
-      localStorage.theme == 'light'
+      localStorage.setItem("theme", 'light')
     }
   }, [])
 
@@ -61,10 +70,11 @@ export default function App() {
       <ul className='px-8 filter-none sm:text-sm text-xs md:text-base lg:text-lg xl:text-xl sm:px-10 md:px-12 lg:px-14 xl:px-16 2xl:px-20 pt-8 w-full h-screen overflow-auto'>
         <GlobalStateContext.Provider value={{
           dragAlertShow, dragAlertHandler, alertShow, alertHandler, chosenTag, setChosenTag,
-          moreTimeSeparator, currentBox, drag, setDrag, setCurrentBox, formValues, setFormValues, chosenDay, setChosenDay,
-          showMobBar, setMobBar, iconBg, setIconBg, bundleIcon, setBundleIcon, bundleColor, setBundleColor, tags, task, setTask
+          moreTimeSeparator, currentBox, transitionState, setTransitionState, drag, setDrag, setCurrentBox, formValues, setFormValues,
+          chosenDay, setChosenDay, showMobBar, setMobBar, iconBg, setIconBg, bundleIcon, setBundleIcon, bundleColor, setBundleColor, tags, task, setTask
         }}>
           <Outlet />
+          {transitionState.isTransition ? <PageTransition onClick={() => console.log('aa')} props={{ msg: "siuuuuuu", route: false, status: 200 }} /> : null}
 
         </GlobalStateContext.Provider>
 

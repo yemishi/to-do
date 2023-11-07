@@ -161,20 +161,20 @@ export const configIcon = () => {
       console.log("something doest working here")
     }
   }
-  const handleClick = useCallback((e) => {
+  const handleClick = (e) => {
     setFormValues({ ...formValues, demo: { ...formValues.demo, icon: e } });
-  }, [formValues.demo]);
 
+  }
 
-  const categoryElements = useMemo(() => (
-    category.map((e) => (
+  const categoryElements = () => {
+    return category.map((e) => (
       <motion.li key={e} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className='p-2'>
         <img className={`${iconW} sm:p-2 w-6 md-p3 cursor-pointer active:scale-90 duration-500 rounded-md hover:opacity-70`}
           src={e} alt="icon" onClick={() => handleClick(e)} />
       </motion.li>
     ))
 
-  ), [category, iconW, handleClick]);
+  }
 
   return <motion.div
     onClick={() => setBundleIcon(false)} initial={{ display: 'none' }}
@@ -204,7 +204,7 @@ export const configIcon = () => {
         </nav>
 
         <ul className='flex after:flex-auto justify-between h-72 overflow-scroll flex-wrap'>
-          {categoryElements}
+          {categoryElements()}
         </ul>
 
       </div>

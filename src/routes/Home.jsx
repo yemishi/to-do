@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import React, { useState, useEffect } from 'react'
 
 import { useGlobalState, weekDay } from '../App.jsx'
@@ -19,7 +18,8 @@ export default function Home() {
   const d = date.getDay()
   const currentSeconds = date.getSeconds()
 
-  const { chosenTag, chosenDay, setChosenDay, setTask, setMobBar, showMobBar, task } = useGlobalState()
+  const { chosenTag, chosenDay, setChosenDay, setTask, setMobBar, showMobBar, task, transitionState, setTransitionState } = useGlobalState()
+
   const [darkMode, setDarkMode] = useState()
   const parseToMs = (h, m) => (h * 60 * 60 + m * 60 - currentSeconds) * 1000
 
@@ -44,12 +44,21 @@ export default function Home() {
   }
 
   useEffect(() => {
-    axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.name, password: localStorage.password }).then((res) => {
-      setTask(res.data.content)
-    })
 
     setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
-    if (!localStorage.password && !localStorage.name) navigate("/login")
+    if (!localStorage.password || !localStorage.name) {
+      setTransitionState({ msg: "please log in first", status: 401, route: "/login", isTransition: true })
+    }
+
+    const uploadTasks = async () => {
+
+      const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.getItem("name"), password: localStorage.getItem("password") })
+
+      setTask(res.data.content)
+    }
+
+    uploadTasks()
+
   }, [d])
 
 
@@ -132,13 +141,13 @@ export default function Home() {
       const filterTag = task.filter(e => {
 
         if (chosenDay) {
-          const tagMatches = e.tag.some(tag => {
+          const tagMatches = e.tags.some(tag => {
             return tag === chosenTag;
           });
           return tagMatches && includeDay(e);
         }
         else {
-          return e.tag.some(e => {
+          return e.tags.some(e => {
             return e == chosenTag
           })
         }
@@ -188,11 +197,11 @@ export default function Home() {
 
           if (doc.classList.contains('dark')) {
             doc.classList.remove('dark');
-            localStorage.theme = 'light';
+            localStorage.setItem("theme", 'light');
             setDarkMode('')
           } else {
             doc.classList.add('dark');
-            localStorage.theme = 'dark';
+            localStorage.setItem("theme", 'dark');
             setDarkMode('night')
           }
         }}
@@ -237,7 +246,7 @@ export default function Home() {
 
       <AnimatePresence>
         {taskFilter().sort((a, b) => sortTask(a, b)).map(e => {
-          return <Link to={`/edit/${e.id}`} key={e.id}>
+          return <Link to={`/edit/${e._id}`} key={e._id}>
             <motion.li
               initial={{ opacity: 0, x: -50 }} animate={{ opacity: 0.5, x: 0 }} whileHover={{ opacity: 1 }}
               onLoad={() => eventTime(e)} id={`event${e.id}`} className='bg-opacity-80 event duration-[125ms] '>
@@ -257,7 +266,7 @@ export default function Home() {
                   </span>
 
                   <span className='flex mt-1 items-center gap-x-1'>
-                    {tagFilter(e.tag)}
+                    {tagFilter(e.tags)}
                   </span>
                 </span>
 

@@ -7,14 +7,13 @@ import axios from "axios"
 import PageTransition from "../features/PageTransition"
 
 export default function Login() {
-    localStorage.clear()
-    const { setTask } = useGlobalState()
+
+    const { setTask, setTransitionState, transitionState } = useGlobalState()
     const initialValues = { name: localStorage.name, password: localStorage.password }
     const initialRegister = { name: "", password: "", email: "", checkPass: "" }
 
     const [formRegister, setFormRegister] = useState(initialRegister)
     const [formValues, setFormValues] = useState(initialValues)
-    const [props, setProps] = useState({})
 
     const [passwordVisible, setPasswordVisible] = useState(false)
     const [saveLogin, setSaveLogin] = useState(false)
@@ -94,21 +93,23 @@ export default function Login() {
             try {
                 const { name, password } = formValues
                 const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name, password })
-                console.log(res)
-                const { data, status } = await res.response
+                const { data, status } = res
                 const { msg, content } = data
+                console.log(msg, content)
+                localStorage.setItem("name", formValues.name)
+                localStorage.setItem("password", formValues.password)
+                console.log(localStorage.name)
 
-                localStorage.name = formValues.name
-                localStorage.password = formValues.password
-
+                console.log(saveLogin)
                 if (!saveLogin) {
                     window.addEventListener('beforeunload', () => {
-                        localStorage.removeItem(password)
-                        localStorage.removeItem(name);
+                        localStorage.removeItem("password")
+                        localStorage.removeItem("name");
                     });
                 }
+
                 await setTask(content)
-                setProps({ msg, status, route: "/home" })
+                setTransitionState({ ...transitionState, isTransition: true, msg, status, route: "/home" })
                 setToTransition(true)
 
             } catch (error) {
@@ -132,7 +133,7 @@ export default function Login() {
 
                 const { data, status } = res
                 console.log(data.msg, status)
-                setProps({ msg: data.msg, status })
+                setTransitionState({ ...transitionState, isTransition: true, msg: data.msg, status })
                 setToTransition(true)
                 setTimeout(() => setToTransition(false), 4000)
             } catch (error) {
@@ -158,7 +159,7 @@ export default function Login() {
                 const res = await axios.post(`https://node-mongodb-api-5wtv.onrender.com/forgotPassword/${formValues.email}`)
                 console.log('aaaaa')
                 const { data, status } = res.response
-                setProps({ msg: data.msg, status })
+                setTransitionState({ ...transitionState, isTransition: true, msg: data.msg, status })
 
                 setToTransition(true)
                 setTimeout(() => setToTransition(false), 6000)
@@ -181,7 +182,7 @@ export default function Login() {
 
     return (
         <div className="w-full h-full flex justify-center items-center  absolute left-0 top-0">
-            {toTransition ? <PageTransition props={props} /> : null}
+
             <div className="relative shadow-3xl overflow-hidden bg-gradient-to-b h-[32rem] w-[22rem] shadow-black">
 
                 <motion.div onClick={() => setResetPass(false)} animate={resetPass ? "showF" : "closeF"} variants={resetPassVariants}

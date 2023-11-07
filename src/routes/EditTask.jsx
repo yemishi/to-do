@@ -3,6 +3,8 @@ import Button, { Input } from "../features/FormToolkit"
 import cancel from '../assets/imgs/cancel.svg'
 import bin from '../assets/imgs/bin.svg'
 
+import PageTransition from "../features/PageTransition"
+
 import { useGlobalState } from "../App"
 import React, { useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
@@ -12,18 +14,20 @@ import { chooseBgColor, configIcon, selectedIcon } from "../features/configIcon"
 import { ButtonSaveB } from "../features/FormToolkit"
 
 export default function EditTask() {
-  const { formConfig, setFormConfig, setDrag } = useGlobalState()
+
+  const { formValues, setFormValues, setDrag } = useGlobalState()
   const navigate = useNavigate()
+
   const { id } = useParams()
   useEffect(() => {
+
     const durationDrag = [15, 30, 45, 60, 120];
 
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/editUser/${localStorage.name}/${id}`);
+        const res = await axios.get(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/${id}`);
         const draggable = document.querySelector('.draggable');
-        const chosenDurationKey = durationDrag.find(e => res.data.duration == e);
-
+        const chosenDurationKey = durationDrag.find(e => res.data.content.duration == e);
         if (chosenDurationKey) {
           const chooseDuration = document.querySelectorAll('.chooseDuration');
           const valueIndex = durationDrag.indexOf(chosenDurationKey)
@@ -33,11 +37,11 @@ export default function EditTask() {
 
         } else draggable.classList.add('hidden')
 
-        setFormConfig({ ...formConfig, ...res.data });
+        setFormValues({ ...formValues, ...res.data.content });
 
         document.querySelectorAll('.optionHour').forEach(element => {
           const inputValue = element.firstChild.value;
-          if (inputValue === res.data.hour) {
+          if (inputValue === res.data.content.hour) {
             highlight(element);
           }
         });
@@ -48,20 +52,23 @@ export default function EditTask() {
         }
 
       } catch (error) {
-        navigate('/*')
+        console.log(error)
       }
     };
 
     fetchData();
+
   }, []);
 
-  const editTask = () => {
-    axios.patch(`/${localStorage.name}/task/${id}`, formConfig).then((res) => console.log(res))
+  const editTask = async () => {
+    const res = await axios.patch(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/updateTask/${id}`, formValues)
+      
   }
 
-  const deleteTask = () => {
+  const deleteTask = async () => {
     try {
-      axios.delete(`/https://node-mongodb-api-5wtv.onrender.com/editUser/${localStorage.name}/task/${id}`).then((res) => console.log(res))
+      await axios.delete(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/task/${id}`).then((res) => console.log(res))
+      navigate("/home")
     } catch (error) {
     }
   }
@@ -79,7 +86,7 @@ export default function EditTask() {
       <span className="font-bold">
         <h1 className="text-center font-bold ">Edit Event</h1>
         <p className="text-center font-slab text-gray-200">
-          {`${formConfig.duration >= 60 ? convertMin(formConfig.duration) : `${formConfig.duration} MINUTES`} `}</p>
+          {`${formValues.duration >= 60 ? convertMin(formValues.duration) : `${formValues.duration} MINUTES`} `}</p>
       </span>
       <Link to='/home'>
         <Button props={{ icon: [cancel, 'cancel'] }} />
@@ -88,7 +95,7 @@ export default function EditTask() {
 
 
     <span className="mb-6 w-6/12 md:w-2/6 lg:w-1/4 self-center">
-      <Input props={{ formValues: formConfig, setFormValues: setFormConfig, type: "text", element: "name" }} />
+      <Input props={{ formValues: formValues, setFormValues: setFormValues, type: "text", element: "name" }} />
     </span>
     {selectedIcon()}
     {chooseBgColor()}
@@ -104,7 +111,7 @@ export default function EditTask() {
       {selectHour()}
     </div>
 
-    <Link to='/home'> <ButtonSaveB props={{ action: () => editTask }} />
+    <Link to='/home'> <ButtonSaveB props={{ action: () => editTask(), formValues }} />
     </Link >
   </section>
 

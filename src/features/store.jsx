@@ -30,10 +30,11 @@ while (hourCount <= 23) {
   }
   else minCount += 1
 }
-export const verifyLimit = (settedHour, add = 0) => {
+
+export const verifyLimit = (settedHour = "00:00", add = 0) => {
   const parseToMs = (h, m) => (h * 60 * 60 + m * 60) * 1000
 
-  const time = settedHour.split(':')
+  const time = toString(settedHour).split(':')
   const hour = Number(time[0])
   const minute = Number(time[1])
   return {
@@ -178,6 +179,7 @@ export const moreTime = () => {
         const container = document.querySelectorAll('.moreTimeContainer')
 
         const handleButtonClick = () => {
+
           const { hour } = formValues;
           const targetValue = moreTimeSeparator[0] + moreTimeSeparator[1];
 
@@ -218,9 +220,11 @@ export const moreTime = () => {
 export const selectDuration = () => {
   const { drag, setDrag, dragAlertShow, dragAlertHandler, formValues, setFormValues } = useGlobalState()
   const container = document.querySelector('.durationContainer')
+
   const durationConfig = (d, e) => {
     if (verifyLimit(formValues.hour, d).min) {
       dragAlertHandler(1)
+
       Array.from(container.childNodes).map((ele, y) => {
         if (ele.value == e.target.value) {
           setTimeout(() => {
@@ -230,6 +234,7 @@ export const selectDuration = () => {
       })
 
     } else dragAlertHandler(0)
+
     const draggable = document.querySelector('.draggable')
     draggable.textContent = e.target.value
     setFormValues({ ...formValues, duration: d })
@@ -296,9 +301,9 @@ export const tagConfig = () => {
   const { formValues, tags } = useGlobalState()
   const item = (ele, bg) => {
     return <span key={ele} className={`tagChoose ${bg} disabled`} onClick={(element) => {
-      console.log(formValues.tag)
+      console.log(formValues.tags)
       element.target.classList.toggle('disabled');
-      formValues.tag.some(e => e == ele) ? formValues.tag.splice(formValues.tag.findIndex(e => e == ele), 1) : formValues.tag.push(ele)
+      formValues.tags.some(e => e == ele) ? formValues.tags.splice(formValues.tag.findIndex(e => e == ele), 1) : formValues.tags.push(ele)
     }}>
 
       <p onClick={(ele) => {

@@ -18,21 +18,23 @@ export default function AddTask() {
 
   useEffect(() => {
     const firstDrag = document.querySelector('.chooseDuration')
+
     setFormValues({
       ...formValues,
       duration: 15,
       name: '',
       hour: '00:00',
       weekDay: [],
-      tag: [],
+      tags: [],
     })
+
     setDrag(firstDrag.offsetLeft)
     const hourDefault = document.querySelector('.optionHour')
     hourDefault.classList.add('active')
 
   }, [])
   const submitTask = () => {
-    axios.post(`/${localStorage.name}/task`, formValues).then((res) => {
+    axios.post(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/task`, formValues).then((res) => {
       console.log(res)
     })
   }
@@ -106,6 +108,7 @@ export default function AddTask() {
       <h3 className="">Duration</h3>
       {moreTime()}
     </span>
+
     {selectDuration()}
 
     <h3 className="w-11/12 self-center">When</h3>

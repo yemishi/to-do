@@ -1,11 +1,9 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import PageTransition from "../features/PageTransition"
 
 export default function Validation() {
 
-    const { userName } = useParams()
     const [props, setProps] = useState({})
     const validateUser = async () => {
         try {
@@ -15,7 +13,7 @@ export default function Validation() {
 
 
        
-            const { data, status } = res.response
+            const { data, status } = res
             setProps({ msg: data.msg, status, route: "/login" })
             return
 
