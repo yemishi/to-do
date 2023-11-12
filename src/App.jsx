@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom"
 import React, { useContext, useState, createContext, useRef, useEffect } from "react"
 import { useCycle } from "framer-motion";
 import PageTransition from "./features/PageTransition";
-
+import axios from "axios";
 const GlobalStateContext = createContext();
 
 const date = new Date()
@@ -47,13 +47,28 @@ export default function App() {
     tags: [],
   })
   const tags = ['Leisure', 'Work', 'Study', 'Meal', 'Commute', 'Chores', 'Break']
+
+
   useEffect(() => {
+
     if (Notification.permission !== 'denied') {
       Notification.requestPermission()
     }
-    if (!localStorage.password || !localStorage.name) {
-      setTransitionState({ msg: "please log in first", status: 401, route: "/login", isTransition: true })
-    }
+    const apiUrl = process.env.REACT_APP_SECRET_CODE;
+    console.log(apiUrl);
+
+    const responseInterceptor = axios.interceptors.response.use(
+      response => response,
+      error => {
+        console.log(error)
+        const { data, status } = error.response
+        const { msg, route } = data
+        setTransitionState({ msg, route, status, isTransition: true })
+        return Promise.reject(error);
+      }
+    );
+
+
 
     if (localStorage.getItem("theme") === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
@@ -62,6 +77,11 @@ export default function App() {
       document.documentElement.classList.remove('dark')
       localStorage.setItem("theme", 'light')
     }
+
+
+    return () => {
+      axios.interceptors.response.eject(responseInterceptor);
+    };
   }, [])
 
   return (

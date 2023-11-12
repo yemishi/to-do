@@ -9,7 +9,7 @@ import travel from "../assets/imgs/icons/iconIllustrations/travel.svg"
 import smiley from "../assets/imgs/icons/iconIllustrations/smiley.svg"
 
 import { useGlobalState } from '../App'
-import React, { useEffect, useState, useMemo, useCallback } from "react"
+import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './FormToolkit'
 
@@ -60,7 +60,7 @@ const demo = (type) => {
       <h3>{`Select ${type}`}</h3>
 
       <Button props={{
-        icon: [checked, 'confirm'], action: (e) => {
+        icon: checked, alt: 'confirm', action: (e) => {
           e.preventDefault(), setBundleIcon(false), setBundleColor(false), setFormValues({
             ...formValues, icon: formValues.demo.icon ? formValues.demo.icon : formValues.icon,
             bg: formValues.demo.bg ? formValues.demo.bg : formValues.bg

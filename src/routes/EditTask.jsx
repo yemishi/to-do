@@ -62,7 +62,7 @@ export default function EditTask() {
 
   const editTask = async () => {
     const res = await axios.patch(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/updateTask/${id}`, formValues)
-      
+
   }
 
   const deleteTask = async () => {
@@ -81,7 +81,7 @@ export default function EditTask() {
 
     <header className="w-full flex mb-8 justify-between items-center">
       <Link onClick={(deleteTask)} to='/home'>
-        <Button props={{ icon: [bin, 'delete'] }} />
+        <Button props={{ icon: bin, alt: 'delete' }} />
       </Link>
       <span className="font-bold">
         <h1 className="text-center font-bold ">Edit Event</h1>
@@ -89,7 +89,7 @@ export default function EditTask() {
           {`${formValues.duration >= 60 ? convertMin(formValues.duration) : `${formValues.duration} MINUTES`} `}</p>
       </span>
       <Link to='/home'>
-        <Button props={{ icon: [cancel, 'cancel'] }} />
+        <Button props={{ icon: cancel, alt: 'cancel' }} />
       </Link>
     </header>
 

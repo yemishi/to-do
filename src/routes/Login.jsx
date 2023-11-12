@@ -9,7 +9,7 @@ import PageTransition from "../features/PageTransition"
 export default function Login() {
 
     const { setTask, setTransitionState, transitionState } = useGlobalState()
-    const initialValues = { name: localStorage.name, password: localStorage.password }
+    const initialValues = { name: "", password: "" }
     const initialRegister = { name: "", password: "", email: "", checkPass: "" }
 
     const [formRegister, setFormRegister] = useState(initialRegister)
@@ -93,20 +93,12 @@ export default function Login() {
             try {
                 const { name, password } = formValues
                 const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name, password })
-                const { data, status } = res
-                const { msg, content } = data
-                console.log(msg, content)
-                localStorage.setItem("name", formValues.name)
-                localStorage.setItem("password", formValues.password)
-                console.log(localStorage.name)
 
-                console.log(saveLogin)
-                if (!saveLogin) {
-                    window.addEventListener('beforeunload', () => {
-                        localStorage.removeItem("password")
-                        localStorage.removeItem("name");
-                    });
-                }
+                const { data, status } = res
+                const { msg, content, token } = data
+                console.log(res)
+                localStorage.setItem('token', token)
+                console.log(res)
 
                 await setTask(content)
                 setTransitionState({ ...transitionState, isTransition: true, msg, status, route: "/home" })
@@ -114,6 +106,7 @@ export default function Login() {
 
             } catch (error) {
                 const { msg } = await error.response.data
+                console.log(error)
                 setFormErrors({ ...formErrors, data: msg })
             }
 

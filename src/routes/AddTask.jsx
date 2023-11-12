@@ -33,10 +33,9 @@ export default function AddTask() {
     hourDefault.classList.add('active')
 
   }, [])
-  const submitTask = () => {
-    axios.post(`https://node-mongodb-api-5wtv.onrender.com/${localStorage.name}/task`, formValues).then((res) => {
-      console.log(res)
-    })
+  const submitTask = async () => {
+    await axios.post(`https://node-mongodb-api-5wtv.onrender.com/task`, { formValues })
+    
   }
 
   const pushDay = () => {
@@ -87,7 +86,7 @@ export default function AddTask() {
       </span>
 
       <Link to='/home'>
-        <Button props={{ icon: [cancel, 'cancel'] }} />
+        <Button props={{ icon: cancel, alt: 'cancel' }} />
       </Link >
     </header>
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useGlobalState, weekDay } from '../App.jsx'
 import { motion, AnimatePresence } from 'framer-motion'
 import { handlerTag, tagColor } from '../features/store.jsx'
+import Panel from '../features/Panel.jsx'
 import MobileBar from '../features/MobileBar.jsx'
 import Button from '../features/FormToolkit.jsx'
 
@@ -43,23 +44,7 @@ export default function Home() {
     else return parseToMs(pickedHour[0] - regionHour[0] + 24, pickedHour[1] - regionHour[1])
   }
 
-  useEffect(() => {
 
-    setDarkMode(document.documentElement.classList.contains('dark') ? 'night' : '')
-    if (!localStorage.password || !localStorage.name) {
-      setTransitionState({ msg: "please log in first", status: 401, route: "/login", isTransition: true })
-    }
-
-    const uploadTasks = async () => {
-
-      const res = await axios.post('https://node-mongodb-api-5wtv.onrender.com/login', { name: localStorage.getItem("name"), password: localStorage.getItem("password") })
-
-      setTask(res.data.content)
-    }
-
-    uploadTasks()
-
-  }, [d])
 
 
 
@@ -189,35 +174,13 @@ export default function Home() {
   return <div className='wrapper m-0'>
 
     <header className='flex items-center mb-8   justify-between'>
-      <span className='sm:hidden'> <Button props={{ icon: [gear, 'config'], action: () => setMobBar(!showMobBar) }} /></span>
+      <span className='sm:hidden'> <Button props={{ icon: gear, alt: 'config', rotate: true, action: () => setMobBar(!showMobBar) }} /></span>
 
-      <div className={`toggle relative m-0 hidden sm:flex ${darkMode}`}
-        onClick={() => {
-          const doc = document.documentElement;
-
-          if (doc.classList.contains('dark')) {
-            doc.classList.remove('dark');
-            localStorage.setItem("theme", 'light');
-            setDarkMode('')
-          } else {
-            doc.classList.add('dark');
-            localStorage.setItem("theme", 'dark');
-            setDarkMode('night')
-          }
-        }}
-      >
-        <span className={`w-10 notch absolute rounded-full h-10`} />
-        <span>
-          <svg className="cloud sm" />
-          <svg className="cloud sm" />
-          <svg className="cloud md" />
-          <svg className="cloud lg" />
-        </span>
-      </div>
+      <Panel />
       <h1 className='text-white'>{chosenDay ? chosenDay : 'Everyday'}</h1>
 
       <Link to='/new' >
-        <Button props={{ icon: [plus, 'plus'] }} />
+        <Button props={{ icon: plus, alt: 'plus', rotate: true }} />
       </Link>
 
     </header>
@@ -254,7 +217,7 @@ export default function Home() {
               <div className='flex items-center gap-4 '>
 
                 <span className={`w-12 p-3 sm:w-14 md:w-16 rounded-2xl lg:w-20 2xl:w-1/4 ${e.bg}`}>
-                  <img src={e.icon} alt="icon" />
+
                 </span >
 
                 <span className='flex flex-col font-serif'>

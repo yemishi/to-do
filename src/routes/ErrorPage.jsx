@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 
 export default function ErrorPage() {
 
-  return <div class="flex justify-center items-end bg-bubble">
+  return <div className="flex justify-center items-end bg-bubble">
     <div className="font-bold text-2xl flex flex-col sm:text-4xl font-montserrat h-2/3 text-center " >
       <h1 style={{ WebkitTextStroke: '1px white' }} className="text-transparent text-[80px] sm:text-[120px] font-sans">Woops!</h1>
 
